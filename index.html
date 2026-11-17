@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>请请咖啡 · 经营作战台</title>
+<meta name="description" content="请请咖啡 CINCIN 济南双店经营作战台：小程序、点评、小红书、固定成本与保本">
+<meta name="theme-color" content="#C1272D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="请请作战台">
+<meta name="format-detection" content="telephone=no">
+<style>
+:root{--ink:#1B1212;--bg:#F7F1EA;--card:#fff;--line:#E8D9CC;--muted:#8A6F6A;--soft:#F8F1E8;--soft2:#F0E4D6;
+--red:#C1272D;--red2:#B7212C;--cream:#F6E5D0;--cac:#3D4548;--r:22px;--sh:0 1px 2px rgba(27,18,18,.04),0 10px 30px rgba(27,18,18,.06)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",system-ui,-apple-system,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom)}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 28px 10px}
+.top-row{display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand img{height:28px;width:28px;display:block}.brand b{font-size:15px;font-weight:750;white-space:nowrap}
+.brand .live{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--red);background:#FDECEC;padding:3px 8px;border-radius:999px}
+.brand .live:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(193,39,45,.55)}70%{box-shadow:0 0 0 7px rgba(193,39,45,0)}100%{box-shadow:0 0 0 0 rgba(193,39,45,0)}}
+.tabs{display:flex;gap:2px;background:var(--soft2);padding:4px;border-radius:999px;overflow-x:auto;scrollbar-width:none;margin:0 auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:transparent;padding:8px 17px;border-radius:999px;font-size:13.5px;font-weight:650;color:#6B5550;white-space:nowrap;transition:background .2s}
+.tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.right{display:flex;align-items:center;gap:14px;flex:none}
+.clock{text-align:right;line-height:1.2}.clock .t{font-size:17px;font-weight:750}.clock .t small{font-size:10.5px;color:var(--muted);font-weight:500;margin-left:3px}.clock .s{font-size:10.5px;color:var(--muted)}
+.icon-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:650}
+.icon-btn.dark{background:var(--red);color:#fff;border-color:var(--red)}
+.sub{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 28px 0;max-width:1640px;margin:0 auto}
+.sub .ttl{font-size:22px;font-weight:800;letter-spacing:-.3px;margin-right:6px}
+.pill{font-size:11.5px;padding:5px 11px;border-radius:999px;background:#FDECEC;color:var(--red);white-space:nowrap}
+.pill.g{background:#E9F7EC;color:#23663A}.pill.n{background:var(--soft2);color:#5C4A46}
+.upd{font-size:12px;color:var(--muted);margin-left:auto}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:650;color:#5C4A46}
+.seg button.on{background:var(--red);color:#fff}
+.ticker{order:9;flex:1 1 100%;overflow:hidden;white-space:nowrap;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;padding:7px 0;color:#4A3532}
+@media(min-width:1200px){.ticker{order:0;flex:1 1 260px;min-width:200px}.upd{order:1;width:100%;margin-left:0;text-align:right;margin-top:-4px}}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 55s linear infinite}
+.ticker em{font-style:normal;color:var(--red);margin:0 8px 0 26px}
+@keyframes tick{to{transform:translateX(-100%)}}
+.obs{background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;font-size:13px;line-height:1.65;margin-bottom:16px}
+main{padding:16px 28px 30px;max-width:1640px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:20px 22px;min-width:0;position:relative;opacity:0;transform:translateY(12px);transition:opacity .55s,transform .55s}
+.go .card{opacity:1;transform:none}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.ch h3{margin:0;font-size:14.5px;font-weight:750;display:flex;align-items:center;gap:9px}
+.ch h3 .ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--soft2);font-size:14px}
+.tag{font-size:11px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.note{font-size:11.5px;color:var(--muted);line-height:1.65}
+.miss{color:#B5543C;font-weight:650}.nc{color:#9A8A84;font-weight:650}
+.lbl{font-size:12px;color:var(--muted);font-weight:600}
+.hero-n{font-size:clamp(40px,4.6vw,64px);font-weight:850;letter-spacing:-1.6px;line-height:1}
+.big{font-size:clamp(24px,2.2vw,32px);font-weight:820;letter-spacing:-.5px;line-height:1.1}
+.mid{font-size:20px;font-weight:780;letter-spacing:-.3px}
+.hbar{height:8px;background:var(--soft2);border-radius:999px;overflow:hidden}
+.hbar i{display:block;height:100%;width:0;border-radius:999px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.go .hbar i{width:var(--w)}
+.stack{display:flex;height:10px;border-radius:999px;overflow:hidden;background:var(--soft2)}
+.stack i{display:block;height:100%}
+svg .grow{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.go svg .grow{transform:scaleY(1)}
+.tiles{display:grid;gap:10px}.t2{grid-template-columns:repeat(2,minmax(0,1fr))}.t3{grid-template-columns:repeat(3,minmax(0,1fr))}.t4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tile{background:var(--soft);border-radius:16px;padding:12px 14px;min-width:0}
+.tile .l{font-size:11.5px;color:var(--muted)}.tile .v{font-size:19px;font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.kpi{padding:16px 18px 12px}
+.kpi .k{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted);font-weight:650}
+.kpi .v{font-size:clamp(22px,2vw,30px);font-weight:820;letter-spacing:-.5px;margin:8px 0 6px}
+.kpi .n{font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:6px}
+.kpi .dot{width:9px;height:9px;border-radius:50%;background:var(--red)}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+table.t th{font-weight:650;color:var(--muted);text-align:right;padding:7px 6px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:11.5px}
+table.t td{text-align:right;padding:8px 6px;border-bottom:1px solid #F3EBE3}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t tr.hl td{font-weight:800;background:#FDF6F0}
+.tw{overflow-x:auto}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F3EBE3}
+.row:last-child{border-bottom:0}.row .grow1{flex:1;min-width:0}
+.ph{border:1.5px dashed #E0D0C4;border-radius:16px;padding:14px 16px;background:repeating-linear-gradient(45deg,#FBF8F4,#FBF8F4 10px,#F6EFE8 10px,#F6EFE8 20px)}
+.ph .v{font-size:22px;font-weight:700;color:#9A8A84;margin-bottom:4px}
+.dish{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F3EBE3}
+.dish .rk{font-weight:800;color:#A39893;font-size:12px}.dish .nm{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dish .meta{font-size:11px;color:var(--muted);margin:3px 0 5px}.dish .tot{text-align:right;font-size:16px;font-weight:820;white-space:nowrap}
+.sec{font-size:13px;font-weight:750;color:#5C4A46;margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+.sec:after{content:"";flex:1;height:1px;background:var(--line)}
+details.foot{margin-top:16px;background:#fff;border-radius:var(--r);padding:14px 20px;box-shadow:var(--sh)}
+details.foot summary{cursor:pointer;font-weight:650;font-size:13px}
+details.foot p{font-size:11.5px;color:var(--muted);line-height:1.8;margin:8px 0 0}
+.err{background:#FDECE7;color:#8A2E17;padding:10px 28px;font-size:13px;display:none}
+.hint{font-size:12px;color:#5C4A46;background:#FFFBE6;border:1px solid #F3E5A2;border-radius:12px;padding:8px 12px;margin:12px 28px 0;display:none}
+.inp{width:84px;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:13px;background:#fff;font-variant-numeric:tabular-nums}
+.inp:focus{outline:2px solid rgba(193,39,45,.25);border-color:var(--red)}
+.fly{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.fly .step{border:1px solid var(--red);color:var(--red);border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:650}
+.fly .arr{color:var(--muted)}
+.store-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.store-col{padding:0 16px}
+.store-col + .store-col{border-left:1px solid var(--line)}
+.score{font-size:28px;font-weight:820;color:var(--red);letter-spacing:-.5px}
+.dim{opacity:.55}
+.fun{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fun .n{width:72px;font-size:12px;color:#5C4A46}
+.fun .b{flex:1;height:18px;background:var(--soft2);border-radius:4px;overflow:hidden}
+.fun .b i{display:block;height:100%;background:var(--red);border-radius:4px;opacity:.85;width:0;transition:width 1s}
+.go .fun .b i{width:var(--w)}
+.comp{padding:8px 0;border-bottom:1px solid #F3EBE3}
+.comp:last-of-type{border-bottom:0}
+.comp .hd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;align-items:center;font-size:13px}
+.range{width:100%;accent-color:var(--red);margin:8px 0}
+.formula{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:12.5px;margin:8px 0}
+.split2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1280px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.tab{padding:8px 12px}}
+@media (max-width:1100px){.c3,.c4,.c5{grid-column:span 6}.c6,.c7,.c8{grid-column:span 12}.top-row{flex-wrap:wrap}.tabs{order:3;width:100%;margin:0}.store-grid,.split2{grid-template-columns:1fr}.store-col + .store-col{border-left:0;border-top:1px solid var(--line);padding-top:14px;margin-top:10px}}
+@media (max-width:760px){
+ .top{padding:calc(8px + env(safe-area-inset-top)) 14px 8px}.brand img{height:24px;width:24px}.brand b{font-size:13.5px}.brand .live{display:none}
+ .clock .t{font-size:15px}.clock .s{display:none}.right{gap:8px;margin-left:auto}#refresh{display:none}
+ .tabs{border-radius:14px}.tab{padding:7px 12px;font-size:13px}
+ .sub{padding:12px 14px 0;gap:8px}.sub .ttl{font-size:19px}.upd{margin-left:0;width:100%}
+ .hint{margin:10px 14px 0}
+ main{padding:12px 14px 26px}.grid{gap:12px}
+ .c3,.c4,.c5,.c6,.c7,.c8,.c12{grid-column:span 12}
+ .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .card{padding:16px}.hero-n{font-size:46px}.t3,.t4{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .store-col{padding:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="top-row">
+  <div class="brand"><img src="icons/logo-mark.png" alt="CINCIN"><b>经营作战台</b><span class="live">LIVE</span></div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="right">
+   <div class="clock"><div class="t num"><span id="clk">--:--:--</span><small>东京</small></div><div class="s num" id="clk2">济南 --:--</div></div>
+   <button class="icon-btn" id="refresh" title="重新拉取 data.json">刷新</button>
+   <button class="icon-btn dark" id="install" style="display:none">安装</button>
+  </div>
+ </div>
+</header>
+<div class="err" id="err"></div>
+<div class="hint" id="hint"></div>
+<div class="sub"><div id="sub" style="display:contents"></div><div class="ticker"><span id="tick-inner"></span></div></div>
+<main id="main"></main>
+<script>
+(function(){
+'use strict';
+var D=null,S={tab:'home',period:'today',store:'all',channel:'all',metric:'gmv',hover:null};
+var TABS=[['home','总览'],['biz','经营'],['dish','商品'],['cost','成本·保本'],['social','社媒·口碑']];
+var LS_KEY='cincin-ops-settings';
+var SET={dayOrders:'',daySales:'',monthOrders:'',monthSales:'',marginPct:'',wageCbdShare:50};
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function isNum(v){return typeof v==='number'&&isFinite(v)}
+function money(n,dp){dp=dp==null?2:dp;if(!isNum(n))return '';var s=Math.abs(n).toLocaleString('zh-CN',{minimumFractionDigits:dp,maximumFractionDigits:dp});return (n<0?'−':'')+'¥'+s}
+function int(n){return Math.round(n).toLocaleString('zh-CN')}
+function pct(a,b,dp){if(!isNum(a)||!isNum(b)||!b)return '—';dp=dp==null?1:dp;var p=a/b*100;return (dp===0?Math.round(p):p.toFixed(dp)).replace(/\.0$/,'')+'%'}
+function show(v,fmt,miss){
+  if(!isNum(v))return '<span class="nc">'+(miss||'待接入')+'</span>';
+  if(fmt==='money')return '<span class="num">'+money(v)+'</span>';
+  if(fmt==='money0')return '<span class="num">'+money(v,0)+'</span>';
+  return '<span class="num">'+int(v)+'</span>';
+}
+function pending(note){return '<div class="ph"><div class="v">待接入</div><div class="note">'+esc(note||'')+'</div></div>'}
+function card(cls,icon,title,tag,body){return '<section class="card '+cls+'"><div class="ch"><h3>'+(icon?'<span class="ic">'+icon+'</span>':'')+title+'</h3>'+(tag?'<span class="tag">'+tag+'</span>':'')+'</div>'+body+'</section>'}
+function hbar(p,color){p=Math.max(0,Math.min(100,p||0));return '<div class="hbar"><i style="--w:'+p+'%;background:'+(color||'var(--red)')+'"></i></div>'}
+function loadSet(){
+  try{
+    var j=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    if(!j||typeof j!=='object')return;
+    ['dayOrders','daySales','monthOrders','monthSales','marginPct'].forEach(function(k){
+      if(j[k]==null)return;
+      var s=String(j[k]);
+      if(/^\d*\.?\d*$/.test(s))SET[k]=s;
+    });
+    if(isNum(+j.wageCbdShare))SET.wageCbdShare=Math.max(0,Math.min(100,Math.round(+j.wageCbdShare)));
+  }catch(e){}
+}
+function saveSet(){try{localStorage.setItem(LS_KEY,JSON.stringify(SET))}catch(e){}}
+function parseT(s){var n=parseFloat(s);return (s!==''&&isNum(n)&&n>0)?n:null}
+function fig(){return D.periods[S.period][S.store]}
+function periodLabel(){return D.periods[S.period].label}
+function storeLabel(){return S.store==='all'?'双店合计':S.store==='cbd'?'CBD店':'在公园（CAC）'}
+function channelLabel(){return S.channel==='all'?'小程序口径':S.channel==='dine'?'堂食':S.channel==='group'?'团购':'外卖'}
+function locked(){return S.channel!=='all'}
+function avg(g,o){return isNum(g)&&isNum(o)&&o?g/o:null}
+
+function seg(key,opts,val){
+  return '<div class="seg">'+opts.map(function(o){return '<button data-'+key+'="'+o[0]+'" class="'+(val===o[0]?'on':'')+'">'+o[1]+'</button>'}).join('')+'</div>';
+}
+function filters(){
+  return seg('p',[['today','今日'],['week','本周'],['month','本月']],S.period)
+    +seg('st',[['all','合计'],['cbd','CBD店'],['cac','在公园']],S.store)
+    +seg('ch',[['all','小程序'],['dine','堂食'],['group','团购'],['delivery','外卖']],S.channel);
+}
+
+function inp(key,prefix){
+  return (prefix?'<span style="color:var(--muted)">'+prefix+'</span> ':'')+
+    '<input class="inp" id="inp-'+key+'" data-k="'+key+'" inputmode="decimal" placeholder="可填" value="'+esc(SET[key])+'">';
+}
+
+function kpiBox(k,v,n){return '<div class="card kpi"><div class="k"><span>'+k+'</span><span class="dot"></span></div><div class="v num">'+v+'</div><div class="n">'+n+'</div></div>'}
+
+function kpisHTML(){
+  var f=fig(),lockedCh=locked();
+  if(lockedCh){
+    var miss=channelLabel()+' 尚无拆分，不套用小程序合计';
+    return '<div class="kpis">'+
+      kpiBox('单量(笔)', '<span class="nc">待接入</span>', miss)+
+      kpiBox('营业总额', '<span class="nc">待接入</span>', '经营分析暂无渠道数据')+
+      kpiBox('营收', '<span class="nc">待接入</span>', '待接入')+
+      kpiBox('优惠', '<span class="nc">待接入</span>', '后台字段「优惠」；成本亦待接入')+
+      kpiBox('完成度', '<span class="nc">待接入</span>', '无渠道目标')+
+      kpiBox('单均', '<span class="nc">待接入</span>', '营业总额 / 笔数')+
+    '</div>';
+  }
+  var todayF=D.periods.today[S.store], monthF=D.periods.month[S.store];
+  var doT=parseT(SET.dayOrders), dsT=parseT(SET.daySales), moT=parseT(SET.monthOrders), msT=parseT(SET.monthSales);
+  var doneNote='目标可填，存在本机';
+  if(S.period==='today'&&doT)doneNote=todayF.orders+' / '+int(doT)+'（'+pct(todayF.orders,doT)+'）';
+  else if(S.period==='today'&&dsT)doneNote=money(todayF.gmv)+' / '+money(dsT)+'（'+pct(todayF.gmv,dsT)+'）';
+  else if(S.period!=='today'&&moT)doneNote=monthF.orders+' / '+int(moT)+'（'+pct(monthF.orders,moT)+'）';
+  else if(S.period!=='today'&&msT)doneNote=money(monthF.gmv)+' / '+money(msT)+'（'+pct(monthF.gmv,msT)+'）';
+  var weekNote=S.store!=='all'&&S.period==='week'?'分店本周为 11-16 + 11-17 相加；分店营收未单列':'小程序后台·营业汇总';
+  return '<div class="kpis">'+
+    kpiBox('单量(笔)', show(f.orders), periodLabel()+' · '+storeLabel()+' · 支付笔数，不是杯量')+
+    kpiBox('营业总额', show(f.gmv,'money'), weekNote)+
+    kpiBox('营收', show(f.rev,'money','该店该期营收未单列'), isNum(f.rev)?'小程序后台·营业汇总':'分店营收未单列')+
+    kpiBox('优惠', show(f.disc,'money','分店优惠未单列'), isNum(f.disc)?'后台字段「优惠」；成本/支出待接入':'分店优惠未单列；成本待接入')+
+    kpiBox('完成度', doneNote, '当前 / 目标，目标可填，保存在本机')+
+    kpiBox('单均', show(avg(f.gmv,f.orders),'money'), '营业总额 / '+f.orders+' 笔，不等于点评人均')+
+  '</div>';
+}
+
+function extraNotes(){
+  if(locked())return '';
+  var bits=[];
+  if(S.period==='month'&&S.store==='all'){
+    var p=D.payment;
+    bits.push('<div class="note" style="margin:-6px 0 12px">11 月迄今还有：支付 '+money(p.pay_total)+' · 退款 '+money(p.refund)+' · 微信 '+money(p.wechat)+' · 支付宝 '+money(p.alipay)+' · 余额（储值）'+money(p.balance)+'。三种方式之和 '+money(p.methods_sum)+'，与支付相差 '+money(p.gap)+'，后台未说明原因，不强行对齐。</div>');
+  }
+  if(S.period==='today'){
+    var h=D.home_today_cbd;
+    bits.push('<div class="note" style="margin:-6px 0 12px">首页（CBD）：访问人数 '+int(h.visits)+'、支付人数 '+int(h.payers)+'、折前笔单价 '+money(h.unit_before)+'（与 CBD 今日 '+money(D.periods.today.cbd.gmv)+' / '+D.periods.today.cbd.orders+' 笔一致）、较昨日 −'+money(Math.abs(h.vs_yesterday_gmv))+'。累计客户数 '+int(h.customers_total)+'，今日新增消费客户 '+int(h.customers_new_today)+'。客户数是否含双店，首页未单独标明。今日为截至 16:49 东京的迄今数，非全天锁定。</div>');
+  }
+  if(S.period==='week'){
+    bits.push('<div class="note" style="margin:-6px 0 12px">'+esc(D.periods.week.note)+' 合计 '+D.periods.week.all.orders+' 笔、营业总额 '+money(D.periods.week.all.gmv)+'、营收 '+money(D.periods.week.all.rev)+'、优惠 '+money(D.periods.week.all.disc)+'。</div>');
+  }
+  return bits.join('');
+}
+
+function storeCard(key,dim){
+  var s=D.stores[key], sf=D.periods[S.period][key];
+  var sets=s.sets.map(function(x){return '<div class="row" style="padding:4px 0"><span class="grow1">'+esc(x.name)+'</span><span class="num" style="font-weight:700">'+money(x.price)+'</span></div>'}).join('');
+  var foot=locked()
+    ? periodLabel()+' · '+channelLabel()+'：待接入（无渠道拆分）'
+    : periodLabel()+' · 小程序：'+sf.orders+' 笔 · 营业总额 '+money(sf.gmv)+(isNum(sf.rev)?' · 营收 '+money(sf.rev):' · 营收未单列')+(S.period==='week'?'（两日相加）':'');
+  return '<div class="store-col'+(dim?' dim':'')+'">'+
+    '<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><b>'+esc(s.short)+' · '+esc(s.backend)+'</b><span class="lbl">'+esc(s.area)+'</span></div>'+
+    '<div class="note" style="margin:2px 0 8px">'+esc(s.addr)+'</div>'+
+    '<div class="tiles t3" style="margin-bottom:8px"><div class="tile"><div class="l">评分</div><div class="v score">'+esc(s.score)+'</div></div>'+
+    '<div class="tile"><div class="l">评价</div><div class="v num">'+int(s.reviews)+'</div></div>'+
+    '<div class="tile"><div class="l">点评人均</div><div class="v num">'+money(s.atv,0)+'</div></div></div>'+
+    '<div class="note">'+esc(s.rank)+' · '+esc(s.note)+'</div>'+
+    '<div class="note" style="margin:8px 0 4px">点评在售套餐（不等于堂食标价，也非销量）</div>'+sets+
+    '<div class="note" style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">'+foot+'</div></div>';
+}
+
+function trendSVG(){
+  if(locked())return pending('经营分析暂无渠道拆分，后台无团购渠道。不用小程序合计冒充堂食/团购/外卖。');
+  var days=D.days, W=1280,H=260,L=56,R=20,T0=24,B=36;
+  var metric=S.metric, maxV=metric==='orders'?16:700;
+  var ticks=metric==='orders'?[0,4,8,12,16]:[0,200,400,600];
+  function val(d,p){return metric==='orders'?(p==='cbd'?d.cbd_orders:d.cac_orders):(p==='cbd'?d.cbd_gmv:d.cac_gmv)}
+  function y(v){return T0+(H-T0-B)*(1-v/maxV)}
+  var slot=(W-L-R)/days.length, bw=slot*0.22;
+  var dimCbd=S.store==='cac'?0.25:1, dimCac=S.store==='cbd'?0.25:1;
+  var svg='<svg width="100%" viewBox="0 0 '+W+' '+H+'" id="trend">';
+  ticks.forEach(function(v){svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#E8D9CC"/><text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="13" fill="#8A6F6A">'+v+'</text>'});
+  days.forEach(function(d,i){
+    var x0=L+slot*i+(slot-bw*2-8)/2, a=val(d,'cbd'), b=val(d,'cac');
+    var labA=metric==='orders'?a:Math.round(a), labB=metric==='orders'?b:Math.round(b);
+    svg+='<g data-i="'+i+'" class="hit" style="cursor:pointer">'+
+      '<rect x="'+(L+slot*i)+'" y="'+T0+'" width="'+slot+'" height="'+(H-T0-B)+'" fill="'+(S.hover===i?'rgba(193,39,45,.06)':'transparent')+'"/>'+
+      '<rect class="grow" x="'+x0+'" y="'+y(a)+'" width="'+bw+'" height="'+(y(0)-y(a))+'" fill="#C1272D" opacity="'+dimCbd+'"/>'+
+      '<rect class="grow" x="'+(x0+bw+8)+'" y="'+y(b)+'" width="'+bw+'" height="'+(y(0)-y(b))+'" fill="#3D4548" opacity="'+dimCac+'"/>'+
+      '<text x="'+(x0+bw/2)+'" y="'+(y(a)-6)+'" text-anchor="middle" font-size="13" fill="#5C4A46">'+labA+'</text>'+
+      '<text x="'+(x0+bw+8+bw/2)+'" y="'+(y(b)-6)+'" text-anchor="middle" font-size="13" fill="#5C4A46">'+labB+'</text>'+
+      '<text x="'+(L+slot*i+slot/2)+'" y="'+(H-12)+'" text-anchor="middle" font-size="13" fill="#8A6F6A">'+d.date+'</text></g>';
+  });
+  svg+='</svg>';
+  var tip='';
+  if(S.hover!=null&&days[S.hover]){
+    var d=days[S.hover];
+    tip='<div style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12px;margin-bottom:8px" class="num">'+
+      '<b>'+d.date+'</b><div><span style="color:var(--red)">■</span> CBD '+d.cbd_orders+' 笔 · 营业总额 '+money(d.cbd_gmv)+'</div>'+
+      '<div><span style="color:#3D4548">■</span> 在公园 '+d.cac_orders+' 笔 · 营业总额 '+money(d.cac_gmv)+'</div>'+
+      '<div>合计 '+(d.cbd_orders+d.cac_orders)+' 笔 · '+money(d.cbd_gmv+d.cac_gmv)+'</div></div>';
+  }
+  var legend='<div class="note" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">'+
+    '<span><span style="color:var(--red)">■</span> CBD店</span><span><span style="color:#3D4548">■</span> 在公园</span>'+
+    '<span>'+esc(D.days_note)+'</span></div>';
+  var metricSeg=seg('m',[['gmv','营业总额'],['orders','单量(笔)']],S.metric);
+  return tip+svg+legend;
+}
+
+function compRow(name,cur,curLabel,key,prefix,hot,note){
+  var tgt=parseT(SET[key]);
+  var ratio=isNum(cur)&&tgt?pct(cur,tgt):'—%';
+  return '<div class="comp" style="'+(hot?'':'opacity:.6')+'"><div class="hd"><span class="lbl">'+name+'</span>'+
+    '<span class="num" style="font-weight:700;font-size:'+(hot?16:13)+'px"><span style="color:'+(cur==null?'#9A8A84':'inherit')+'">'+curLabel+'</span>'+
+    '<span style="color:var(--muted);font-weight:400"> / '+inp(key,prefix)+'（'+ratio+'）</span></span></div>'+
+    hbar(tgt&&isNum(cur)?(cur/tgt*100):0)+
+    (note?'<div class="note" style="margin-top:4px">'+note+'</div>':'')+'</div>';
+}
+
+function completionHTML(){
+  var title=S.period==='today'?'完成度 · 今日（目标可填）':S.period==='week'?'完成度 · 本周（按月目标对照）':'完成度 · 本月（目标可填）';
+  if(locked()){
+    return card('c6','🎯',title,'目标可填', '<div class="note">切到堂食 / 团购 / 外卖时，完成度不套用小程序合计。目标仍可先填并保存在本机，但当前值待渠道拆分接入。</div>');
+  }
+  var todayF=D.periods.today[S.store], monthF=D.periods.month[S.store];
+  var monthNote=S.store==='all'?'11 月迄今 418 笔（CBD 119 + 在公园 299）':'';
+  return card('c6','🎯',title,'保存在本机',
+    compRow('当日单量(笔) / 日目标', todayF.orders, String(todayF.orders), 'dayOrders', '', S.period==='today')+
+    compRow('当日营业总额 / 日目标', todayF.gmv, money(todayF.gmv), 'daySales', '¥', S.period==='today')+
+    compRow('本月单量(笔) / 月目标', monthF.orders, String(monthF.orders), 'monthOrders', '', S.period!=='today', monthNote)+
+    compRow('本月营业总额 / 月目标', monthF.gmv, money(monthF.gmv), 'monthSales', '¥', S.period!=='today')+
+    '<div class="note" style="margin-top:8px">口径：完成度 = 当前 / 目标，按当前所选店计算。单量是支付笔数，不是杯量。目标保存在本机（localStorage），刷新还在。不用点评人均反推目标。</div>');
+}
+
+function funnelHTML(){
+  var showVisit=!locked()&&S.period==='today'&&(S.store==='cbd'||S.store==='all');
+  var h=D.home_today_cbd;
+  var rows=showVisit
+    ?[{name:'访问',v:String(h.visits),w:100,conv:'首页·CBD'},
+      {name:'进店/到店',v:'待接入',w:0,conv:'—'},
+      {name:'支付人数',v:String(h.payers),w:h.payers/h.visits*100,conv:pct(h.payers,h.visits)+'（相对访问）'}]
+    :[{name:'访问',v:'待接入',w:0,conv:''},{name:'进店/到店',v:'待接入',w:0,conv:''},{name:'支付人数',v:'待接入',w:0,conv:''}];
+  var body=rows.map(function(r){return '<div class="fun"><span class="n">'+r.name+'</span><div class="b"><i style="--w:'+r.w+'%"></i></div>'+
+    '<span class="num" style="width:64px;text-align:right;font-weight:700;color:'+(r.v==='待接入'?'#9A8A84':'inherit')+'">'+r.v+'</span>'+
+    '<span class="note" style="width:110px;text-align:right">'+esc(r.conv)+'</span></div>'}).join('');
+  var note=showVisit?h.note:'除 CBD 今日首页访问/支付人数外，曝光、进店、其他店与周期的漏斗待接入。缺数不画 0。';
+  return card('c6','🔻','流量漏斗 · '+periodLabel()+' · '+storeLabel()+' · '+channelLabel(), '', body+'<div class="note" style="margin-top:8px">'+esc(note)+'</div>');
+}
+
+function rankBlock(title,list,color){
+  var maxQty=1;
+  D.items.cbd.concat(D.items.cac).forEach(function(i){if(i.qty>maxQty)maxQty=i.qty});
+  return '<div><div class="lbl" style="margin-bottom:6px">'+esc(title)+'</div>'+list.map(function(d,i){
+    return '<div class="dish"><div class="rk">'+(i+1)+'</div><div class="grow1"><div class="nm">'+esc(d.name)+' <span class="lbl">'+esc(d.cat)+'</span></div>'+
+      hbar(d.qty/maxQty*100, i?color||'#C4B4A8':'var(--red)')+'</div>'+
+      '<div class="tot num">'+d.qty+' · '+money(d.amt)+'</div></div>';
+  }).join('')+'</div>';
+}
+
+function itemsHTML(){
+  var showCac=S.store!=='cbd', showCbd=S.store!=='cac';
+  var title='商品排行 · 11 月迄今 · '+(S.store==='all'?'分店':storeLabel());
+  return card('c12','☕',title,'小程序商品汇总',
+    '<div class="split2">'+(showCac?rankBlock('在公园',D.items.cac,'#3D4548'):'')+(showCbd?rankBlock('CBD店',D.items.cbd,'#C1272D'):'')+'</div>'+
+    '<div class="note" style="margin-top:10px">'+esc(D.items.note)+'</div>');
+}
+
+function unitCostHTML(){
+  var rows=['咖啡','果茶气泡','甜品'].map(function(n){
+    return '<tr><td>'+n+'</td><td class="nc">待接入</td><td class="nc">—</td></tr>';
+  }).join('');
+  return card('c6','💧','单杯成本 / 毛利 · 轻量','待接入',
+    '<div class="tw"><table class="t"><thead><tr><th>品类</th><th>单杯成本</th><th>毛利</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="note" style="margin-top:8px">'+esc(D.unit_costs_note)+'</div>');
+}
+
+function flyHTML(){
+  var steps=D.flywheel.map(function(s,i){return '<span class="step">'+esc(s)+'</span>'+(i<D.flywheel.length-1?'<span class="arr">→</span>':'<span class="arr">回曝光 ↺</span>')}).join('');
+  return card('c12','🌀','优化飞轮','', '<div class="fly">'+steps+'</div><div class="note" style="margin-top:8px">'+esc(D.flywheel_note)+'</div>');
+}
+
+function socialHTML(){
+  var x=D.social.xiaohongshu, b=x.brand, w=x.wangpo;
+  function acc(a,extra){
+    return '<div><div style="font-weight:700;font-size:14px">'+esc(a.account)+'</div>'+
+      '<div class="note">'+esc(a.handle?(a===b?'小红书号 '+a.handle+' · IP '+a.ip:'小红书号 '+a.handle+' · '+a.role):'')+'</div>'+
+      '<div class="tiles t3" style="margin:8px 0"><div class="tile"><div class="l">关注</div><div class="v num">'+int(a.following)+'</div></div>'+
+      '<div class="tile"><div class="l">粉丝</div><div class="v num" style="color:var(--red)">'+int(a.followers)+'</div></div>'+
+      '<div class="tile"><div class="l">'+esc(a.likes_label)+'</div><div class="v num">'+int(a.likes)+'</div></div></div>'+
+      extra+'</div>';
+  }
+  var brandExtra='<div class="note">'+esc(b.bio)+'</div>'+b.lines.map(function(l){return '<div style="font-size:12.5px;color:#5C4A46;margin-top:2px">'+esc(l)+'</div>'}).join('')+
+    '<div class="note" style="margin-top:8px">置顶：'+esc(b.pinned.join('；'))+'</div>';
+  var wpExtra='<div style="font-size:12.5px;color:#5C4A46">'+esc(w.shop_score_note)+'</div><div style="font-size:12.5px;color:#5C4A46;margin-top:2px">简介：'+esc(w.bio)+'</div>';
+  return card('c8','📕','线上声量 · 小红书', D.sources.xiaohongshu.as_of+' 东京',
+    '<div class="split2">'+acc(b,brandExtra)+acc(w,wpExtra)+'</div>'+
+    '<div class="note" style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">'+esc(x.note)+'</div>');
+}
+
+function deliveryHTML(){
+  return card('c4','🛵','外卖 · 淘宝闪购','待接入', pending(D.delivery_note));
+}
+
+function fixedSnapshot(){
+  var fc=D.fixed_costs, m=parseT(SET.marginPct);
+  var be=m?fc.monthly_total/(m/100):null;
+  return card('c12','🏠','固定成本 / 保本（双店合计）','大拙确认 11-17',
+    '<div class="tiles t4">'+
+      '<div class="tile"><div class="l">CBD 月租金</div><div class="v num">'+money(fc.rent.cbd.monthly)+'</div><div class="note">年租 '+money(fc.rent.cbd.annual,0)+' ÷ 12</div></div>'+
+      '<div class="tile"><div class="l">在公园 月租金</div><div class="v num">'+money(fc.rent.cac.monthly)+'</div><div class="note">年租 '+money(fc.rent.cac.annual,0)+' ÷ 12</div></div>'+
+      '<div class="tile"><div class="l">工资（双店合计）</div><div class="v num">'+money(fc.wages.monthly,0)+'</div><div class="note">含社保 · 已确认不是单店</div></div>'+
+      '<div class="tile"><div class="l">月固定成本</div><div class="v num" style="color:var(--red)">'+money(fc.monthly_total)+'</div><div class="note">约 ¥26,667（取整到元）</div></div>'+
+    '</div>'+
+    '<div class="formula">保本营业额 = 月固定成本 ÷ 毛利率　　'+(be?'按你填的 '+SET.marginPct+'% 估算为 <b class="num">'+money(be)+'</b>':'毛利率待接入，填入后再算，不估算')+'</div>'+
+    '<div class="note">主口径看双店合计。毛利率可在「成本·保本」页填写并保存在本机。分店工资分摊未知，默认按 50/50 假设。</div>');
+}
+
+function costPage(){
+  var fc=D.fixed_costs, share=SET.wageCbdShare, m=parseT(SET.marginPct);
+  var wageCbd=fc.wages.monthly*share/100, wageCac=fc.wages.monthly*(100-share)/100;
+  var fixCbd=fc.rent.cbd.monthly+wageCbd, fixCac=fc.rent.cac.monthly+wageCac;
+  var be=m?fc.monthly_total/(m/100):null;
+  var beCbd=m?fixCbd/(m/100):null, beCac=m?fixCac/(m/100):null;
+  var monthG=D.periods.month.all.gmv;
+  var vs=be?'本月迄今小程序营业总额 '+money(monthG)+'，相当于按该毛利率估算的月保本的 '+pct(monthG,be)+'。本月尚未结束，只作对照，不是全月锁定。':'';
+
+  var rentTbl='<div class="tw"><table class="t"><thead><tr><th>项目</th><th>口径</th><th>年</th><th>月摊</th></tr></thead><tbody>'+
+    '<tr><td>CBD 租金</td><td class="note" style="text-align:right">已确认</td><td class="num">'+money(fc.rent.cbd.annual,0)+'</td><td class="num">'+money(fc.rent.cbd.monthly)+'</td></tr>'+
+    '<tr><td>在公园 租金</td><td class="note" style="text-align:right">已确认</td><td class="num">'+money(fc.rent.cac.annual,0)+'</td><td class="num">'+money(fc.rent.cac.monthly)+'</td></tr>'+
+    '<tr><td>人员工资</td><td class="note" style="text-align:right">双店合计 · 含社保 · 已确认</td><td class="nc">—</td><td class="num">'+money(fc.wages.monthly,0)+'</td></tr>'+
+    '<tr class="hl"><td>合计</td><td class="note" style="text-align:right">月固定成本</td><td class="nc">—</td><td class="num">'+money(fc.monthly_total)+'</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="note" style="margin-top:8px">'+esc(fc.rent.cbd.note)+'；'+esc(fc.rent.cac.note)+'。若将 CBD 月租金四舍五入到元（¥6,667），合计为 ¥26,667。来源：'+esc(fc.source)+'。</div>';
+
+  var beCard='<div class="lbl">毛利率（可填，保存在本机）</div>'+
+    '<div style="display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap">'+inp('marginPct','')+' <span class="note">%</span></div>'+
+    '<div class="formula">'+esc(fc.breakeven_formula)+'<br>'+
+    (be?'按 '+esc(SET.marginPct)+'% 计算，双店月保本营业额 <b style="font-size:22px" class="num">'+money(be)+'</b>':'毛利率仍待接入。不预设、不估算。填入正数后再显示保本额。')+'</div>'+
+    (vs?'<div class="note">'+vs+'</div>':'')+
+    '<div class="note" style="margin-top:8px">这是主口径：工资按双店合计进固定成本，不做分店拆分。毛利率来自你填写的假设或日后接入的成本核算，不是后台实数。</div>';
+
+  var splitCard='<div class="lbl">工资分摊（假设，非实数）</div>'+
+    '<div class="note" style="margin:6px 0">分店怎么分这笔 ¥12,000 尚未确认。下面默认 50/50，可拖动修改，只用于估算分店固定成本与分店保本，不写入经营实数。</div>'+
+    '<div style="display:flex;justify-content:space-between" class="num"><span>CBD '+share+'%</span><span>在公园 '+(100-share)+'%</span></div>'+
+    '<input class="range" id="inp-wage" data-k="wageCbdShare" type="range" min="0" max="100" step="5" value="'+share+'">'+
+    '<div class="tw"><table class="t"><thead><tr><th>店铺</th><th>租金（实数）</th><th>工资（假设）</th><th>月固定</th><th>月保本</th></tr></thead><tbody>'+
+    '<tr><td>CBD店</td><td class="num">'+money(fc.rent.cbd.monthly)+'</td><td class="num">'+money(wageCbd)+'</td><td class="num">'+money(fixCbd)+'</td><td>'+(beCbd?'<span class="num">'+money(beCbd)+'</span>':'<span class="nc">待填毛利率</span>')+'</td></tr>'+
+    '<tr><td>在公园</td><td class="num">'+money(fc.rent.cac.monthly)+'</td><td class="num">'+money(wageCac)+'</td><td class="num">'+money(fixCac)+'</td><td>'+(beCac?'<span class="num">'+money(beCac)+'</span>':'<span class="nc">待填毛利率</span>')+'</td></tr>'+
+    '<tr class="hl"><td>双店合计</td><td class="num">'+money(fc.rent.cbd.monthly+fc.rent.cac.monthly)+'</td><td class="num">'+money(fc.wages.monthly)+'</td><td class="num">'+money(fc.monthly_total)+'</td><td>'+(be?'<span class="num">'+money(be)+'</span>':'<span class="nc">待填毛利率</span>')+'</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="note" style="margin-top:8px">分店月固定 = 该店租金 + 工资 × 假设份额。分店保本 = 分店月固定 ÷ 毛利率。工资分摊和毛利率都是可改假设，刷新后仍在本机。</div>';
+
+  return '<div class="grid">'+
+    card('c7','🏠','月固定成本（已确认）', fc.as_of, rentTbl)+
+    card('c5','🧮','保本营业额 · 双店合计（主口径）','毛利率待接入', beCard)+
+    card('c12','🏬','分店固定成本与保本', '工资分摊为假设', splitCard)+
+    card('c6','💧','单杯成本 / 毛利','待接入', pending(D.unit_costs_note))+
+    card('c6','☕','杯量','待接入', pending(D.cups_note))+
+    '</div>';
+}
+
+function sourcesHTML(){
+  var s=D.sources;
+  return '<details class="foot"><summary>口径、来源与仍缺字段</summary>'+
+    '<p><b>已填实数（均注明来源）</b><br>'+
+    esc(s.miniprogram.label)+'，'+esc(s.miniprogram.as_of)+'（东京）：今日/本周/本月营业总额、营收、优惠、支付笔数、分店实绩、支付方式、11 月商品销量与销售额、CBD 首页访问与支付人数、累计客户数。<br>'+
+    esc(s.dianping.label)+' '+esc(s.dianping.as_of)+'：双店评分、评价数、人均、榜单、套餐价、「中式窗」子页面。<br>'+
+    esc(s.xiaohongshu.label)+' '+esc(s.xiaohongshu.as_of)+'（东京）：品牌号与「王婆卖咖」的关注、粉丝、获赞与收藏、简介与置顶。<br>'+
+    esc(s.fixed_costs.label)+'：CBD 年租金 ¥80,000、在公园年租金 ¥96,000、人员工资 ¥12,000/月（双店合计，含社保）。</p>'+
+    '<p><b>仍缺、后续可补</b><br>'+
+    '1. 渠道拆分（堂食 / 团购 / 外卖）。<br>2. 团购（点评 / 美团），后台无此渠道。<br>3. 杯量：单量(笔)是支付笔数，商品「销量」不作杯量口径。<br>4. 单杯成本 / 品类毛利。<br>5. 综合毛利率（保本公式已给出，待填或待接入后计算）。<br>6. 工资如何在两店之间分摊。<br>7. 漏斗：首页访问以外的曝光、进店/到店；在公园与周/月访问。<br>8. 11-16 之前的日趋势。<br>9. 小红书粉丝趋势、笔记曝光与互动。<br>10. 外卖 / 淘宝闪购经营数。</p>'+
+    '<p>'+esc(D.footer)+'</p></details>';
+}
+
+function vHome(){
+  var g='<div class="obs">'+esc(D.header_note)+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
+  g+=card('c12','📍','双店对照 · 点评清单 + 小程序实绩', D.sources.dianping.as_of,
+    '<div class="store-grid">'+storeCard('cbd',S.store==='cac')+storeCard('cac',S.store==='cbd')+'</div>'+
+    '<div class="note" style="margin-top:10px">'+esc(D.stores_extra_note)+' 评分 / 评价数 / 人均 / 榜单 / 套餐价来自 '+esc(D.sources.dianping.as_of)+' 大众点评截图；营业数字来自小程序后台（'+esc(D.sources.miniprogram.as_of)+' 东京）。</div>');
+  g+=completionHTML();
+  g+=funnelHTML();
+  g+=fixedSnapshot();
+  g+=flyHTML();
+  g+='</div>'+sourcesHTML();
+  return g;
+}
+
+function vBiz(){
+  var g=kpisHTML()+extraNotes()+'<div class="grid">';
+  g+=card('c12','📍','双店对照 · 点评清单 + 小程序实绩', D.sources.dianping.as_of,
+    '<div class="store-grid">'+storeCard('cbd',S.store==='cac')+storeCard('cac',S.store==='cbd')+'</div>'+
+    '<div class="note" style="margin-top:10px">'+esc(D.stores_extra_note)+'</div>');
+  g+=card('c12','📈','日趋势 · '+storeLabel()+' · '+channelLabel()+' · 覆盖 11-16 至 11-17',
+    locked()?'':seg('m',[['gmv','营业总额'],['orders','单量(笔)']],S.metric).replace('class="seg"','class="seg" style="margin:0"'),
+    trendSVG());
+  g+=funnelHTML();
+  if(!locked()&&S.period==='month'&&S.store==='all'){
+    var p=D.payment, sum=p.methods_sum;
+    g+=card('c6','💳','支付构成 · 11 月迄今 · 双店','小程序后台',
+      '<div class="tiles t2" style="margin-bottom:10px">'+
+        '<div class="tile"><div class="l">支付</div><div class="v num">'+money(p.pay_total)+'</div></div>'+
+        '<div class="tile"><div class="l">退款</div><div class="v num">'+money(p.refund)+'</div></div></div>'+
+      '<div class="row"><span>微信</span><div class="grow1">'+hbar(p.wechat/p.pay_total*100,'#07C160')+'</div><span class="num" style="font-weight:700">'+money(p.wechat)+' · '+pct(p.wechat,p.pay_total)+'</span></div>'+
+      '<div class="row"><span>支付宝</span><div class="grow1">'+hbar(p.alipay/p.pay_total*100,'#1677FF')+'</div><span class="num" style="font-weight:700">'+money(p.alipay)+' · '+pct(p.alipay,p.pay_total)+'</span></div>'+
+      '<div class="row"><span>余额（储值）</span><div class="grow1">'+hbar(p.balance/p.pay_total*100,'var(--red)')+'</div><span class="num" style="font-weight:700">'+money(p.balance)+' · '+pct(p.balance,p.pay_total)+'</span></div>'+
+      '<div class="note" style="margin-top:8px">'+esc(p.note)+'</div>');
+  } else {
+    g+=card('c6','💳','支付构成', periodLabel()+' · '+storeLabel(),
+      (S.period==='month'&&S.store==='all'&&locked())?pending('渠道拆分待接入，不套用合计支付构成。'):'<div class="note">支付方式目前只有 11 月迄今、双店合计的一笔数。切到今日/本周或单店时不拆开，也不补 0。</div>');
+  }
+  g+=card('c6','🍽️','堂食 / 团购 / 外卖拆分','待接入', pending(D.channels_note));
+  g+=deliveryHTML();
+  g+=card('c6','🎫','团购','待接入', pending(D.group_buy_note));
+  g+='</div>'+sourcesHTML();
+  return g;
+}
+
+function vDish(){
+  return '<div class="grid">'+itemsHTML()+unitCostHTML()+card('c6','☕','杯量','待接入', pending(D.cups_note))+'</div>'+sourcesHTML();
+}
+
+function vSocial(){
+  var dp='<div class="split2">'+['cbd','cac'].map(function(k){
+    var s=D.stores[k];
+    return '<div><div style="font-weight:700">'+esc(s.name)+'</div><div class="note">'+esc(s.addr)+'</div>'+
+      '<div class="tiles t3" style="margin:8px 0"><div class="tile"><div class="l">评分</div><div class="v score">'+esc(s.score)+'</div></div>'+
+      '<div class="tile"><div class="l">评价</div><div class="v num">'+int(s.reviews)+'</div></div>'+
+      '<div class="tile"><div class="l">点评人均</div><div class="v num">'+money(s.atv,0)+'</div></div></div>'+
+      '<div class="note">'+esc(s.rank)+' · '+esc(s.note)+'</div></div>';
+  }).join('')+'</div><div class="note" style="margin-top:8px">'+esc(D.stores_extra_note)+' 来源：'+esc(D.sources.dianping.label)+' '+esc(D.sources.dianping.as_of)+'。</div>';
+  return '<div class="grid">'+socialHTML()+deliveryHTML()+card('c12','🟠','大众点评 · 双店口碑', D.sources.dianping.as_of, dp)+'</div>'+sourcesHTML();
+}
+
+function render(anim){
+  if(anim==null)anim=true;
+  var titles={home:'总览',biz:'经营',dish:'商品',cost:'成本 · 保本',social:'社媒 · 口碑'};
+  $('tabs').innerHTML=TABS.map(function(t){return '<button class="tab'+(S.tab===t[0]?' on':'')+'" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('');
+  $('sub').innerHTML='<div class="ttl">'+titles[S.tab]+'</div><span class="pill '+(D.status.indexOf('终版')>=0?'g':'')+'">'+esc(D.status)+'</span>'+
+    (S.tab==='cost'?'':'<span style="display:inline-flex;gap:8px;flex-wrap:wrap">'+filters()+'</span>')+
+    '<div class="upd num">数据 '+esc(D.updated_label)+'<br>小程序截至 '+esc(D.sources.miniprogram.as_of)+'（东京）；点评截至 '+esc(D.sources.dianping.as_of)+'；小红书截至 '+esc(D.sources.xiaohongshu.as_of)+'（东京）；济南比东京慢 1 小时</div>';
+  var html=S.tab==='home'?vHome():S.tab==='biz'?vBiz():S.tab==='dish'?vDish():S.tab==='cost'?costPage():vSocial();
+  $('main').innerHTML=html;
+  if(anim){requestAnimationFrame(function(){document.body.classList.add('go')})}
+  else document.body.classList.add('go');
+}
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button,[data-i]');if(!b)return;
+  if(b.dataset.t){S.tab=b.dataset.t;S.hover=null;document.body.classList.remove('go');render();try{history.replaceState(null,'','#'+S.tab)}catch(_){}window.scrollTo(0,0)}
+  else if(b.dataset.p){S.period=b.dataset.p;S.hover=null;render(false)}
+  else if(b.dataset.st){S.store=b.dataset.st;S.hover=null;render(false)}
+  else if(b.dataset.ch){S.channel=b.dataset.ch;S.hover=null;render(false)}
+  else if(b.dataset.m){S.metric=b.dataset.m;render(false)}
+  else if(b.dataset.i!=null){S.hover=+b.dataset.i;render(false)}
+});
+document.addEventListener('mouseover',function(e){
+  var h=e.target.closest&&e.target.closest('.hit');if(!h)return;
+  var i=+h.dataset.i;if(S.hover===i)return;S.hover=i;
+  if(S.tab==='biz'||S.tab==='home')render(false);
+});
+
+document.addEventListener('input',function(e){
+  var el=e.target, k=el&&el.dataset.k; if(!k)return;
+  if(k==='wageCbdShare'){SET.wageCbdShare=+el.value;saveSet();var id=el.id;render(false);if($(id))$(id).focus();return}
+  SET[k]=el.value.replace(/[^\d.]/g,'');saveSet();
+  var id=el.id, pos=el.selectionStart;render(false);
+  var n=$(id);if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}
+});
+
+function clock(){var now=new Date(),f=function(tz,s){return new Intl.DateTimeFormat('zh-CN',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:s?'2-digit':undefined,hour12:false}).format(now)};$('clk').textContent=f('Asia/Tokyo',1);$('clk2').textContent='济南 '+f('Asia/Shanghai',0)}
+function load(force){return fetch('data.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){
+  var changed=!D||D.updated_at!==j.updated_at;D=j;$('err').style.display='none';
+  var al=(j.alerts||[]).slice();
+  $('tick-inner').innerHTML=al.map(function(a){return '<em>●</em>'+esc(a)}).join('')+'<em style="color:#2E8B57">●</em>'+esc(j.header_note);
+  if(changed||force){document.body.classList.remove('go');render()}
+}).catch(function(e){$('err').style.display='block';$('err').textContent='data.json 读取失败（'+e.message+'）'+(D?'，显示的是上次的数字。':'，请检查网络后点「刷新」。')})}
+
+loadSet();
+var h0=(location.hash||'').slice(1);if(TABS.some(function(x){return x[0]===h0}))S.tab=h0;
+$('refresh').onclick=function(){load(true)};
+clock();setInterval(clock,1000);load();setInterval(function(){load(false)},5*60*1000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load(false)});
+var deferred=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;$('install').style.display=''});
+$('install').onclick=function(){if(deferred){deferred.prompt();deferred=null;$('install').style.display='none'}};
+var ua=navigator.userAgent,standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+if(!standalone){if(/MicroMessenger/i.test(ua)){$('hint').style.display='block';$('hint').textContent='在微信里可以直接看。想放到桌面：点右上角「…」→「在浏览器打开」，再用浏览器的「添加到主屏幕」。'}
+ else if(/iPhone|iPad|iPod/i.test(ua)){$('hint').style.display='block';$('hint').textContent='放到主屏幕：Safari 底部「分享」→「添加到主屏幕」。'}}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){window.__swOK=true}).catch(function(e){window.__swErr=String(e)})})}
+})();
+</script>
+</body>
+</html>
