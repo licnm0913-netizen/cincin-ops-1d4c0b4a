@@ -329,6 +329,35 @@ function compRow(name,cur,curLabel,key,prefix,hot,note){
     (note?'<div class="note" style="margin-top:4px">'+note+'</div>':'')+'</div>';
 }
 
+
+function ring(pctv,label,big,sub,color){
+  var p=isNum(pctv)?Math.max(0,pctv):0, r=44, c=2*Math.PI*r, f=Math.min(p,100)/100*c;
+  var col=color||(p>=100?'#2E7D4F':p>=80?'#C1272D':'#E08A2E');
+  return '<div style="flex:1 1 150px;min-width:140px;text-align:center;padding:6px 4px">'+
+    '<svg viewBox="0 0 110 110" width="118" height="118"><circle cx="55" cy="55" r="'+r+'" fill="none" stroke="#F0E4D6" stroke-width="11"/>'+
+    '<circle cx="55" cy="55" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+f.toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 55 55)"/>'+
+    '<text x="55" y="60" text-anchor="middle" font-size="22" font-weight="800" fill="#1B1212">'+(isNum(pctv)?Math.round(pctv)+'%':'—')+'</text></svg>'+
+    '<div style="font-weight:700;font-size:13.5px">'+label+'</div>'+
+    '<div class="num" style="font-size:12.5px;color:#5C4A46">'+big+'</div>'+
+    '<div class="note" style="font-size:11px">'+sub+'</div></div>';
+}
+function ringsHTML(){
+  if(locked()||!D.lifeline)return '';
+  var t=D.periods.today[S.store], m=D.periods.month[S.store];
+  var tgt=function(k){return parseT(SET[k])||lifeT(k)};
+  var dS=tgt('daySales'), dO=tgt('dayOrders'), mS=tgt('monthSales'), mO=tgt('monthOrders');
+  var dayN=parseInt((D.updated_at||'').slice(8,10),10)||null;
+  var avg=(dayN&&isNum(m.gmv))?m.gmv/dayN:null, avgO=(dayN&&isNum(m.orders))?m.orders/dayN:null;
+  var pc=function(a,b){return (isNum(a)&&b)?a/b*100:null};
+  var timeP=dayN?Math.round(dayN/30*100):null;
+  var body='<div style="display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px">'+
+    ring(pc(t.gmv,dS),'今日营业额',money(t.gmv)+' / '+money(dS),'截至 '+esc(D.sources.miniprogram.as_of.slice(11))+' 东京，非全天')+
+    ring(pc(t.orders,dO),'今日单量',t.orders+' / '+dO+' 笔','单量 = 支付笔数')+
+    ring(pc(avg,dS),'本月日均营业额',(avg!=null?money(Math.round(avg)):'—')+' / '+money(dS),'日均 '+(avgO!=null?avgO.toFixed(1):'—')+' 笔 / '+dO+' 笔')+
+    ring(pc(m.gmv,mS),'本月累计 / 月生命线',money(m.gmv)+' / '+money(mS),'时间进度 '+(timeP!=null?timeP+'%':'—')+'（'+dayN+'/30 天）')+
+    '</div><div class="note" style="margin-top:6px">绿色 = 已过生命线，红色 = 80–99%，橙色 = 不到 80%。'+(parseT(SET.daySales)?'目标按你填的值。':'目标为日均生命线（估算：固定成本 + 原料 30% 假设，未含水电物业平台费）。')+'</div>';
+  return card('c12','🎯','完成度 · '+storeLabel()+' · 对照生命线','估算',body);
+}
 function completionHTML(){
   var title=S.period==='today'?'完成度 · 今日（对照日均生命线）':S.period==='week'?'完成度 · 本周（按月目标对照）':'完成度 · 本月（对照生命线）';
   if(locked()){
@@ -485,7 +514,7 @@ function sourcesHTML(){
 }
 
 function vHome(){
-  var g='<div class="obs">'+esc(D.header_note)+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
+  var g='<div class="grid" style="margin-bottom:16px">'+ringsHTML()+'</div><div class="obs">'+esc(D.header_note)+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
   g+=card('c12','📍','双店对照 · 点评清单 + 小程序实绩', D.sources.dianping.as_of,
     '<div class="store-grid">'+storeCard('cbd',S.store==='cac')+storeCard('cac',S.store==='cbd')+'</div>'+
     '<div class="note" style="margin-top:10px">'+esc(D.stores_extra_note)+' 评分 / 评价数 / 人均 / 榜单 / 套餐价来自 '+esc(D.sources.dianping.as_of)+' 大众点评截图；营业数字来自小程序后台（'+esc(D.sources.miniprogram.as_of)+' 东京）。</div>');
