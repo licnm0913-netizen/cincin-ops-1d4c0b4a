@@ -401,5 +401,44 @@
     "榜单/店铺分"
   ],
   "flywheel_note": "储值余额已占支付约 22%，是复购端的已见信号；毛利仍待成本接入后再判断能否支撑投流。CBD 环境榜、在公园口味榜已见于点评。",
-  "footer": "视觉：八边形标志 + 焕新后品牌红 #C1272D。品牌字标为「請請咖啡 CINCIN COFFEE」，口号「您请来 请您来」。店铺对应：CinCin CBD = 点评 CBD店；CinCin在公园 = 点评 CAC艺术社区店。济南比东京慢 1 小时。数字只写已核对的来源，缺的标「待接入」，不补 0。"
+  "footer": "视觉：八边形标志 + 焕新后品牌红 #C1272D。品牌字标为「請請咖啡 CINCIN COFFEE」，口号「您请来 请您来」。店铺对应：CinCin CBD = 点评 CBD店；CinCin在公园 = 点评 CAC艺术社区店。济南比东京慢 1 小时。数字只写已核对的来源，缺的标「待接入」，不补 0。",
+  "lifeline": {
+    "is_estimate": true,
+    "material_rate_assumed": 0.3,
+    "days_per_month": 30,
+    "basis": "11-01 至 11-18 小程序营业汇总的客单价与营收/营业总额比",
+    "by_store": {
+      "all": {
+        "fixed_monthly": 26666.67,
+        "rev_day": 1269.84,
+        "gmv_day": 1330,
+        "atv": 43.41,
+        "rev_ratio": 0.9553,
+        "orders_day": 31,
+        "gmv_month": 39900,
+        "orders_month": 930
+      },
+      "cbd": {
+        "fixed_monthly": 12666.67,
+        "rev_day": 603.17,
+        "gmv_day": 648,
+        "atv": 45.42,
+        "rev_ratio": 0.931,
+        "orders_day": 15,
+        "gmv_month": 19440,
+        "orders_month": 450
+      },
+      "cac": {
+        "fixed_monthly": 14000,
+        "rev_day": 666.67,
+        "gmv_day": 691,
+        "atv": 42.59,
+        "rev_ratio": 0.9658,
+        "orders_day": 17,
+        "gmv_month": 20730,
+        "orders_month": 510
+      }
+    },
+    "note": "【估算】日均生命线 = 月固定成本 ÷ (1 − 原料成本率 30% 假设) ÷ 30 天，再按 11 月迄今营收/营业总额比换成营业总额，按客单价（营业总额 ÷ 支付笔数）换成单量。分店工资按 50/50 假设。未计水电、物业、平台费、损耗，真实保本线会更高。你在框里填了目标就以你填的为准。"
+  }
 }

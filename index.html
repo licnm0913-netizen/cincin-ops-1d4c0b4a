@@ -208,7 +208,7 @@ function filters(){
 
 function inp(key,prefix){
   return (prefix?'<span style="color:var(--muted)">'+prefix+'</span> ':'')+
-    '<input class="inp" id="inp-'+key+'" data-k="'+key+'" inputmode="decimal" placeholder="可填" value="'+esc(SET[key])+'">';
+    '<input class="inp" id="inp-'+key+'" data-k="'+key+'" inputmode="decimal" placeholder="'+(lifeT(key)!=null?('生命线 '+lifeT(key)):'可填')+'" value="'+esc(SET[key])+'">';
 }
 
 function kpiBox(k,v,n){return '<div class="card kpi"><div class="k"><span>'+k+'</span><span class="dot"></span></div><div class="v num">'+v+'</div><div class="n">'+n+'</div></div>'}
@@ -316,8 +316,11 @@ function trendSVG(){
   return tip+svg+legend;
 }
 
+var LL_MAP={dayOrders:'orders_day',daySales:'gmv_day',monthOrders:'orders_month',monthSales:'gmv_month'};
+function lifeT(key){var L=D.lifeline&&D.lifeline.by_store&&D.lifeline.by_store[S.store];return (L&&LL_MAP[key]&&isNum(L[LL_MAP[key]]))?L[LL_MAP[key]]:null}
 function compRow(name,cur,curLabel,key,prefix,hot,note){
-  var tgt=parseT(SET[key]);
+  var own=parseT(SET[key]), life=lifeT(key), tgt=own||life;
+  if(!own&&life){note=(note?note+'；':'')+'目标未填，按日均生命线（估算）'+(prefix||'')+life+' 计'}
   var ratio=isNum(cur)&&tgt?pct(cur,tgt):'—%';
   return '<div class="comp" style="'+(hot?'':'opacity:.6')+'"><div class="hd"><span class="lbl">'+name+'</span>'+
     '<span class="num" style="font-weight:700;font-size:'+(hot?16:13)+'px"><span style="color:'+(cur==null?'#9A8A84':'inherit')+'">'+curLabel+'</span>'+
@@ -327,18 +330,18 @@ function compRow(name,cur,curLabel,key,prefix,hot,note){
 }
 
 function completionHTML(){
-  var title=S.period==='today'?'完成度 · 今日（目标可填）':S.period==='week'?'完成度 · 本周（按月目标对照）':'完成度 · 本月（目标可填）';
+  var title=S.period==='today'?'完成度 · 今日（对照日均生命线）':S.period==='week'?'完成度 · 本周（按月目标对照）':'完成度 · 本月（对照生命线）';
   if(locked()){
     return card('c6','🎯',title,'目标可填', '<div class="note">切到堂食 / 团购 / 外卖时，完成度不套用小程序合计。目标仍可先填并保存在本机，但当前值待渠道拆分接入。</div>');
   }
   var todayF=D.periods.today[S.store], monthF=D.periods.month[S.store];
-  var monthNote=S.store==='all'?'11 月迄今 418 笔（CBD 119 + 在公园 299）':'';
+  var monthNote='';
   return card('c6','🎯',title,'保存在本机',
     compRow('当日单量(笔) / 日目标', todayF.orders, String(todayF.orders), 'dayOrders', '', S.period==='today')+
     compRow('当日营业总额 / 日目标', todayF.gmv, money(todayF.gmv), 'daySales', '¥', S.period==='today')+
     compRow('本月单量(笔) / 月目标', monthF.orders, String(monthF.orders), 'monthOrders', '', S.period!=='today', monthNote)+
     compRow('本月营业总额 / 月目标', monthF.gmv, money(monthF.gmv), 'monthSales', '¥', S.period!=='today')+
-    '<div class="note" style="margin-top:8px">口径：完成度 = 当前 / 目标，按当前所选店计算。单量是支付笔数，不是杯量。目标保存在本机（localStorage），刷新还在。不用点评人均反推目标。</div>');
+    '<div class="note" style="margin-top:8px">口径：完成度 = 当前 / 目标，按当前所选店计算。单量是支付笔数，不是杯量。目标保存在本机（localStorage），刷新还在。不用点评人均反推目标。</div>'+(D.lifeline?'<div class="note" style="margin-top:6px">'+esc(D.lifeline.note)+'</div>':''));
 }
 
 function funnelHTML(){
