@@ -122,8 +122,20 @@ details.foot p{font-size:11.5px;color:var(--muted);line-height:1.8;margin:8px 0 
 .range{width:100%;accent-color:var(--red);margin:8px 0}
 .formula{background:var(--soft);border-radius:12px;padding:10px 12px;font-size:12.5px;margin:8px 0}
 .split2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.money3{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:12px}
+.mbox{background:var(--soft);border-radius:18px;padding:14px 16px;min-width:0}
+.mbox.main{background:#FDF1EE;border:1px solid #F3CFC9}
+.mbox .l{font-size:12px;color:var(--muted);font-weight:650;display:flex;justify-content:space-between;gap:6px;align-items:center}
+.mbox .v{font-size:clamp(24px,2.4vw,34px);font-weight:840;letter-spacing:-.6px;margin:6px 0 8px;line-height:1.1}
+.mbox .sp{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:4px 0;border-top:1px dashed #E8D9CC}
+.mbox .sp b{font-weight:750}
+.mbox .sp.in{padding-left:12px;color:#6B5550;font-size:12px;border-top:0}
+.chip{font-size:10.5px;padding:2px 8px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#5C4A46;white-space:nowrap}
+.chip.r{background:var(--red);border-color:var(--red);color:#fff}
+.lg{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--muted);margin-top:6px}
+.lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 @media (max-width:1280px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.tab{padding:8px 12px}}
-@media (max-width:1100px){.c3,.c4,.c5{grid-column:span 6}.c6,.c7,.c8{grid-column:span 12}.top-row{flex-wrap:wrap}.tabs{order:3;width:100%;margin:0}.store-grid,.split2{grid-template-columns:1fr}.store-col + .store-col{border-left:0;border-top:1px solid var(--line);padding-top:14px;margin-top:10px}}
+@media (max-width:1100px){.money3{grid-template-columns:1fr}.c3,.c4,.c5{grid-column:span 6}.c6,.c7,.c8{grid-column:span 12}.top-row{flex-wrap:wrap}.tabs{order:3;width:100%;margin:0}.store-grid,.split2{grid-template-columns:1fr}.store-col + .store-col{border-left:0;border-top:1px solid var(--line);padding-top:14px;margin-top:10px}}
 @media (max-width:760px){
  .top{padding:calc(8px + env(safe-area-inset-top)) 14px 8px}.brand img{height:24px;width:24px}.brand b{font-size:13.5px}.brand .live{display:none}
  .clock .t{font-size:15px}.clock .s{display:none}.right{gap:8px;margin-left:auto}#refresh{display:none}
@@ -166,7 +178,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function isNum(v){return typeof v==='number'&&isFinite(v)}
 function money(n,dp){dp=dp==null?2:dp;if(!isNum(n))return '';var s=Math.abs(n).toLocaleString('zh-CN',{minimumFractionDigits:dp,maximumFractionDigits:dp});return (n<0?'−':'')+'¥'+s}
 function int(n){return Math.round(n).toLocaleString('zh-CN')}
-function pct(a,b,dp){if(!isNum(a)||!isNum(b)||!b)return '—';dp=dp==null?1:dp;var p=a/b*100;return (dp===0?Math.round(p):p.toFixed(dp)).replace(/\.0$/,'')+'%'}
+function pct(a,b,dp){if(!isNum(a)||!isNum(b)||!b)return '—';dp=dp==null?1:dp;var p=a/b*100;return String(dp===0?Math.round(p):p.toFixed(dp)).replace(/\.0$/,'')+'%'}
 function show(v,fmt,miss){
   if(!isNum(v))return '<span class="nc">'+(miss||'待接入')+'</span>';
   if(fmt==='money')return '<span class="num">'+money(v)+'</span>';
@@ -219,11 +231,11 @@ function kpisHTML(){
     var miss=channelLabel()+' 尚无拆分，不套用小程序合计';
     return '<div class="kpis">'+
       kpiBox('单量(笔)', '<span class="nc">待接入</span>', miss)+
-      kpiBox('营业总额', '<span class="nc">待接入</span>', '经营分析暂无渠道数据')+
+      kpiBox('实际消费', '<span class="nc">待接入</span>', '经营分析暂无渠道数据')+
       kpiBox('营收', '<span class="nc">待接入</span>', '待接入')+
       kpiBox('优惠', '<span class="nc">待接入</span>', '后台字段「优惠」；成本亦待接入')+
       kpiBox('完成度', '<span class="nc">待接入</span>', '无渠道目标')+
-      kpiBox('单均', '<span class="nc">待接入</span>', '营业总额 / 笔数')+
+      kpiBox('单均', '<span class="nc">待接入</span>', '实际消费 / 笔数')+
     '</div>';
   }
   var todayF=D.periods.today[S.store], monthF=D.periods.month[S.store];
@@ -233,14 +245,14 @@ function kpisHTML(){
   else if(S.period==='today'&&dsT)doneNote=money(todayF.gmv)+' / '+money(dsT)+'（'+pct(todayF.gmv,dsT)+'）';
   else if(S.period!=='today'&&moT)doneNote=monthF.orders+' / '+int(moT)+'（'+pct(monthF.orders,moT)+'）';
   else if(S.period!=='today'&&msT)doneNote=money(monthF.gmv)+' / '+money(msT)+'（'+pct(monthF.gmv,msT)+'）';
-  var weekNote=S.store!=='all'&&S.period==='week'?'分店本周为 11-16 + 11-17 相加；分店营收未单列':'小程序后台·营业汇总';
+  var weekNote='= 后台营业总额，不含充值';
   return '<div class="kpis">'+
     kpiBox('单量(笔)', show(f.orders), periodLabel()+' · '+storeLabel()+' · 支付笔数，不是杯量')+
-    kpiBox('营业总额', show(f.gmv,'money'), weekNote)+
+    kpiBox('实际消费', show(f.gmv,'money'), weekNote)+
     kpiBox('营收', show(f.rev,'money','该店该期营收未单列'), isNum(f.rev)?'小程序后台·营业汇总':'分店营收未单列')+
     kpiBox('优惠', show(f.disc,'money','分店优惠未单列'), isNum(f.disc)?'后台字段「优惠」；成本/支出待接入':'分店优惠未单列；成本待接入')+
     kpiBox('完成度', doneNote, '当前 / 目标，目标可填，保存在本机')+
-    kpiBox('单均', show(avg(f.gmv,f.orders),'money'), '营业总额 / '+f.orders+' 笔，不等于点评人均')+
+    kpiBox('单均', show(avg(f.gmv,f.orders),'money'), '实际消费 / '+f.orders+' 笔，不等于点评人均')+
   '</div>';
 }
 
@@ -249,14 +261,14 @@ function extraNotes(){
   var bits=[];
   if(S.period==='month'&&S.store==='all'){
     var p=D.payment;
-    bits.push('<div class="note" style="margin:-6px 0 12px">11 月迄今还有：支付 '+money(p.pay_total)+' · 退款 '+money(p.refund)+' · 微信 '+money(p.wechat)+' · 支付宝 '+money(p.alipay)+' · 余额（储值）'+money(p.balance)+'。三种方式之和 '+money(p.methods_sum)+'，与支付相差 '+money(p.gap)+'，后台未说明原因，不强行对齐。</div>');
+    bits.push('<div class="note" style="margin:-6px 0 12px">11 月迄今支付构成：实付净额 '+money(p.pay_total)+'（已扣退款 '+money(p.refund)+'）· 微信 '+money(p.wechat)+' · 支付宝 '+money(p.alipay)+' · 现金 '+money(p.cash)+' · 余额付 '+money(p.balance)+'（四项之和 = 实付净额）。充值不在支付构成里，单列见「资金口径」。</div>');
   }
   if(S.period==='today'){
     var h=D.home_today_cbd;
-    bits.push('<div class="note" style="margin:-6px 0 12px">首页（CBD）：访问人数 '+int(h.visits)+'、支付人数 '+int(h.payers)+'、折前笔单价 '+money(h.unit_before)+'（与 CBD 今日 '+money(D.periods.today.cbd.gmv)+' / '+D.periods.today.cbd.orders+' 笔一致）、较昨日 −'+money(Math.abs(h.vs_yesterday_gmv))+'。累计客户数 '+int(h.customers_total)+'，今日新增消费客户 '+int(h.customers_new_today)+'。客户数是否含双店，首页未单独标明。今日为截至 16:49 东京的迄今数，非全天锁定。</div>');
+    bits.push('<div class="note" style="margin:-6px 0 12px">首页（CBD，11-17 读数，今日未重读）：访问人数 '+int(h.visits)+'、支付人数 '+int(h.payers)+'、折前笔单价 '+money(h.unit_before)+'、较前一日 −'+money(Math.abs(h.vs_yesterday_gmv))+'。累计客户数 '+int(h.customers_total)+'，当日新增消费客户 '+int(h.customers_new_today)+'。客户数是否含双店，首页未单独标明。</div>');
   }
   if(S.period==='week'){
-    bits.push('<div class="note" style="margin:-6px 0 12px">'+esc(D.periods.week.note)+' 合计 '+D.periods.week.all.orders+' 笔、营业总额 '+money(D.periods.week.all.gmv)+'、营收 '+money(D.periods.week.all.rev)+'、优惠 '+money(D.periods.week.all.disc)+'。</div>');
+    bits.push('<div class="note" style="margin:-6px 0 12px">'+esc(D.periods.week.note)+' 合计 '+D.periods.week.all.orders+' 笔、实际消费 '+money(D.periods.week.all.gmv)+'、营收 '+money(D.periods.week.all.rev)+'、优惠 '+money(D.periods.week.all.disc)+'。</div>');
   }
   return bits.join('');
 }
@@ -266,7 +278,7 @@ function storeCard(key,dim){
   var sets=s.sets.map(function(x){return '<div class="row" style="padding:4px 0"><span class="grow1">'+esc(x.name)+'</span><span class="num" style="font-weight:700">'+money(x.price)+'</span></div>'}).join('');
   var foot=locked()
     ? periodLabel()+' · '+channelLabel()+'：待接入（无渠道拆分）'
-    : periodLabel()+' · 小程序：'+sf.orders+' 笔 · 营业总额 '+money(sf.gmv)+(isNum(sf.rev)?' · 营收 '+money(sf.rev):' · 营收未单列')+(S.period==='week'?'（两日相加）':'');
+    : periodLabel()+' · 小程序：'+sf.orders+' 笔 · 实际消费 '+money(sf.gmv)+(isNum(sf.rev)?' · 营收 '+money(sf.rev):' · 营收未单列')+(sf.topup&&isNum(sf.topup.principal)?' · 充值另计 '+sf.topup.count+' 笔 '+money(sf.topup.principal,0):'');
   return '<div class="store-col'+(dim?' dim':'')+'">'+
     '<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><b>'+esc(s.short)+' · '+esc(s.backend)+'</b><span class="lbl">'+esc(s.area)+'</span></div>'+
     '<div class="note" style="margin:2px 0 8px">'+esc(s.addr)+'</div>'+
@@ -281,8 +293,10 @@ function storeCard(key,dim){
 function trendSVG(){
   if(locked())return pending('经营分析暂无渠道拆分，后台无团购渠道。不用小程序合计冒充堂食/团购/外卖。');
   var days=D.days, W=1280,H=260,L=56,R=20,T0=24,B=36;
-  var metric=S.metric, maxV=metric==='orders'?16:700;
-  var ticks=metric==='orders'?[0,4,8,12,16]:[0,200,400,600];
+  var metric=S.metric, peak=0;
+  days.forEach(function(d){peak=Math.max(peak,metric==='orders'?Math.max(d.cbd_orders,d.cac_orders):Math.max(d.cbd_gmv,d.cac_gmv))});
+  var step=metric==='orders'?(peak>24?10:4):(peak>1200?500:200), maxV=Math.max(step,Math.ceil(peak*1.08/step)*step), ticks=[];
+  for(var tv=0;tv<=maxV;tv+=step)ticks.push(tv);
   function val(d,p){return metric==='orders'?(p==='cbd'?d.cbd_orders:d.cac_orders):(p==='cbd'?d.cbd_gmv:d.cac_gmv)}
   function y(v){return T0+(H-T0-B)*(1-v/maxV)}
   var slot=(W-L-R)/days.length, bw=slot*0.22;
@@ -305,14 +319,14 @@ function trendSVG(){
   if(S.hover!=null&&days[S.hover]){
     var d=days[S.hover];
     tip='<div style="border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:12px;margin-bottom:8px" class="num">'+
-      '<b>'+d.date+'</b><div><span style="color:var(--red)">■</span> CBD '+d.cbd_orders+' 笔 · 营业总额 '+money(d.cbd_gmv)+'</div>'+
-      '<div><span style="color:#3D4548">■</span> 在公园 '+d.cac_orders+' 笔 · 营业总额 '+money(d.cac_gmv)+'</div>'+
+      '<b>'+d.date+'</b><div><span style="color:var(--red)">■</span> CBD '+d.cbd_orders+' 笔 · 实际消费 '+money(d.cbd_gmv)+'</div>'+
+      '<div><span style="color:#3D4548">■</span> 在公园 '+d.cac_orders+' 笔 · 实际消费 '+money(d.cac_gmv)+'</div>'+
       '<div>合计 '+(d.cbd_orders+d.cac_orders)+' 笔 · '+money(d.cbd_gmv+d.cac_gmv)+'</div></div>';
   }
   var legend='<div class="note" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">'+
     '<span><span style="color:var(--red)">■</span> CBD店</span><span><span style="color:#3D4548">■</span> 在公园</span>'+
     '<span>'+esc(D.days_note)+'</span></div>';
-  var metricSeg=seg('m',[['gmv','营业总额'],['orders','单量(笔)']],S.metric);
+  
   return tip+svg+legend;
 }
 
@@ -351,11 +365,11 @@ function ringsHTML(){
   var pc=function(a,b){return (isNum(a)&&b)?a/b*100:null};
   var timeP=dayN?Math.round(dayN/30*100):null;
   var body='<div style="display:flex;flex-wrap:wrap;justify-content:space-around;gap:4px">'+
-    ring(pc(t.gmv,dS),'今日营业额',money(t.gmv)+' / '+money(dS),'截至 '+esc(D.sources.miniprogram.as_of.slice(11))+' 东京，非全天')+
+    ring(pc(t.gmv,dS),'今日实际消费',money(t.gmv)+' / '+money(dS),'截至 '+esc(D.sources.miniprogram.as_of.slice(11))+' 东京，非全天')+
     ring(pc(t.orders,dO),'今日单量',t.orders+' / '+dO+' 笔','单量 = 支付笔数')+
-    ring(pc(avg,dS),'本月日均营业额',(avg!=null?money(Math.round(avg)):'—')+' / '+money(dS),'日均 '+(avgO!=null?avgO.toFixed(1):'—')+' 笔 / '+dO+' 笔')+
+    ring(pc(avg,dS),'本月日均实际消费',(avg!=null?money(Math.round(avg)):'—')+' / '+money(dS),'日均 '+(avgO!=null?avgO.toFixed(1):'—')+' 笔 / '+dO+' 笔')+
     ring(pc(m.gmv,mS),'本月累计 / 月生命线',money(m.gmv)+' / '+money(mS),'时间进度 '+(timeP!=null?timeP+'%':'—')+'（'+dayN+'/30 天）')+
-    '</div><div class="note" style="margin-top:6px">绿色 = 已过生命线，红色 = 80–99%，橙色 = 不到 80%。'+(parseT(SET.daySales)?'目标按你填的值。':'目标为日均生命线（估算：固定成本 + 原料 30% 假设，未含水电物业平台费）。')+'</div>';
+    '</div><div class="note" style="margin-top:6px">按实际消费（不含充值）对照。绿色 = 已过生命线，红色 = 80–99%，橙色 = 不到 80%。'+(parseT(SET.daySales)?'目标按你填的值。':'目标为日均生命线（估算：固定成本 + 原料 30% 假设，未含水电物业平台费）。')+'</div>';
   return card('c12','🎯','完成度 · '+storeLabel()+' · 对照生命线','估算',body);
 }
 function completionHTML(){
@@ -367,9 +381,9 @@ function completionHTML(){
   var monthNote='';
   return card('c6','🎯',title,'保存在本机',
     compRow('当日单量(笔) / 日目标', todayF.orders, String(todayF.orders), 'dayOrders', '', S.period==='today')+
-    compRow('当日营业总额 / 日目标', todayF.gmv, money(todayF.gmv), 'daySales', '¥', S.period==='today')+
+    compRow('当日实际消费 / 日目标', todayF.gmv, money(todayF.gmv), 'daySales', '¥', S.period==='today')+
     compRow('本月单量(笔) / 月目标', monthF.orders, String(monthF.orders), 'monthOrders', '', S.period!=='today', monthNote)+
-    compRow('本月营业总额 / 月目标', monthF.gmv, money(monthF.gmv), 'monthSales', '¥', S.period!=='today')+
+    compRow('本月实际消费 / 月目标', monthF.gmv, money(monthF.gmv), 'monthSales', '¥', S.period!=='today')+
     '<div class="note" style="margin-top:8px">口径：完成度 = 当前 / 目标，按当前所选店计算。单量是支付笔数，不是杯量。目标保存在本机（localStorage），刷新还在。不用点评人均反推目标。</div>'+(D.lifeline?'<div class="note" style="margin-top:6px">'+esc(D.lifeline.note)+'</div>':''));
 }
 
@@ -463,7 +477,7 @@ function costPage(){
   var be=m?fc.monthly_total/(m/100):null;
   var beCbd=m?fixCbd/(m/100):null, beCac=m?fixCac/(m/100):null;
   var monthG=D.periods.month.all.gmv;
-  var vs=be?'本月迄今小程序营业总额 '+money(monthG)+'，相当于按该毛利率估算的月保本的 '+pct(monthG,be)+'。本月尚未结束，只作对照，不是全月锁定。':'';
+  var vs=be?'本月迄今实际消费 '+money(monthG)+'，相当于按该毛利率估算的月保本的 '+pct(monthG,be)+'。本月尚未结束，只作对照，不是全月锁定。':'';
 
   var rentTbl='<div class="tw"><table class="t"><thead><tr><th>项目</th><th>口径</th><th>年</th><th>月摊</th></tr></thead><tbody>'+
     '<tr><td>CBD 租金</td><td class="note" style="text-align:right">已确认</td><td class="num">'+money(fc.rent.cbd.annual,0)+'</td><td class="num">'+money(fc.rent.cbd.monthly)+'</td></tr>'+
@@ -504,17 +518,99 @@ function sourcesHTML(){
   var s=D.sources;
   return '<details class="foot"><summary>口径、来源与仍缺字段</summary>'+
     '<p><b>已填实数（均注明来源）</b><br>'+
-    esc(s.miniprogram.label)+'，'+esc(s.miniprogram.as_of)+'（东京）：今日/本周/本月营业总额、营收、优惠、支付笔数、分店实绩、支付方式、11 月商品销量与销售额、CBD 首页访问与支付人数、累计客户数。<br>'+
+    esc(s.miniprogram.label)+'，'+esc(s.miniprogram.as_of)+'（东京）：今日/本周/本月营业总额（= 实际消费）、营收、优惠、支付笔数、分店实绩、支付方式、11 月商品销量与销售额、CBD 首页访问与支付人数、累计客户数。<br>'+
     esc(s.dianping.label)+' '+esc(s.dianping.as_of)+'：双店评分、评价数、人均、榜单、套餐价、「中式窗」子页面。<br>'+
     esc(s.xiaohongshu.label)+' '+esc(s.xiaohongshu.as_of)+'（东京）：品牌号与「王婆卖咖」的关注、粉丝、获赞与收藏、简介与置顶。<br>'+
-    esc(s.fixed_costs.label)+'：CBD 年租金 ¥80,000、在公园年租金 ¥96,000、人员工资 ¥12,000/月（双店合计，含社保）。</p>'+
+    esc(s.fixed_costs.label)+'：CBD 年租金 ¥80,000、在公园年租金 ¥96,000、人员工资 ¥12,000/月（双店合计，含社保）。<br>'+
+    (s.stored_value?esc(s.stored_value.label)+'，'+esc(s.stored_value.as_of)+'（东京）：充值笔数/本金/赠送、余额付与余额赠金。':'')+'</p>'+
+    '<p><b>资金口径 v2（'+esc(D.money_scheme.approved)+'）</b><br>'+esc(D.money_scheme.actual)+'<br>'+esc(D.money_scheme.split)+'<br>'+esc(D.money_scheme.topup)+'<br>'+esc(D.money_scheme.cash_in)+'<br>仍缺：'+esc(D.money_scheme.nulls)+'</p>'+
     '<p><b>仍缺、后续可补</b><br>'+
     '1. 渠道拆分（堂食 / 团购 / 外卖）。<br>2. 团购（点评 / 美团），后台无此渠道。<br>3. 杯量：单量(笔)是支付笔数，商品「销量」不作杯量口径。<br>4. 单杯成本 / 品类毛利。<br>5. 综合毛利率（保本公式已给出，待填或待接入后计算）。<br>6. 工资如何在两店之间分摊。<br>7. 漏斗：首页访问以外的曝光、进店/到店；在公园与周/月访问。<br>8. 11-16 之前的日趋势。<br>9. 小红书粉丝趋势、笔记曝光与互动。<br>10. 外卖 / 淘宝闪购经营数。</p>'+
     '<p>'+esc(D.footer)+'</p></details>';
 }
 
+function mv(v,miss){return isNum(v)?'<span class="num">'+money(v)+'</span>':'<span class="nc">'+(miss||'待接入')+'</span>'}
+function moneyCard(){
+  if(locked())return card('c12','💰','资金口径 · '+periodLabel()+' · '+storeLabel(),'口径 v2',pending(channelLabel()+' 尚无拆分：实际消费、充值、实收现金都不套用小程序合计。'));
+  var f=fig(), pb=f.pay_balance||{}, tu=f.topup||{};
+  var cash=f.pay_cash, bal=pb.amount, net=(isNum(cash)&&isNum(bal))?cash+bal:null;
+  var bar='';
+  if(isNum(net)&&net>0){
+    var bb=isNum(pb.bonus)?pb.bonus:0, bp=bal-bb;
+    bar='<div class="stack" style="margin:2px 0 4px"><i style="width:'+(cash/net*100)+'%;background:#07C160"></i><i style="width:'+(bp/net*100)+'%;background:var(--red)"></i><i style="width:'+(bb/net*100)+'%;background:#F0A3A6"></i></div>'+
+      '<div class="lg"><span><i style="background:#07C160"></i>现付 '+pct(cash,net,0)+'</span><span><i style="background:var(--red)"></i>余额付 '+pct(bal,net,0)+'</span>'+(isNum(pb.bonus)?'<span><i style="background:#F0A3A6"></i>其中赠金 '+pct(pb.bonus,net,0)+'</span>':'')+'</div>';
+  }
+  var a='<div class="mbox main"><div class="l"><span>实际消费</span><span class="chip r">主口径</span></div>'+
+    '<div class="v num">'+mv(f.gmv)+'</div>'+
+    '<div class="note" style="margin:-4px 0 8px">= 后台营业总额 · '+f.orders+' 笔 · 不含充值</div>'+bar+
+    '<div class="sp"><span>现付 <span class="note">微信/支付宝/现金</span></span><b>'+mv(cash,'未单列')+'</b></div>'+
+    '<div class="sp"><span>余额付 <span class="note">会员储值</span></span><b>'+mv(bal)+'</b></div>'+
+    '<div class="sp in"><span>└ 本金</span><b>'+mv(pb.principal)+'</b></div>'+
+    '<div class="sp in"><span>└ 赠金</span><b>'+mv(pb.bonus,'未单列')+'</b></div>'+
+    '<div class="note" style="margin-top:6px">付款拆分按支付构成净额（支付 − 退款）'+(isNum(net)?' '+money(net):'')+'，与营业总额口径不同，不强行对齐。</div></div>';
+  var b='<div class="mbox"><div class="l"><span>充值</span><span class="chip">单列 · 不计入营业额</span></div>'+
+    '<div class="v num">'+mv(tu.principal)+'</div>'+
+    '<div class="note" style="margin:-4px 0 8px">本金 · 储值汇总</div>'+
+    '<div class="sp"><span>笔数</span><b class="num">'+(isNum(tu.count)?tu.count+' 笔':'<span class="nc">待接入</span>')+'</b></div>'+
+    '<div class="sp"><span>本金</span><b>'+mv(tu.principal)+'</b></div>'+
+    '<div class="sp"><span>赠送</span><b>'+mv(tu.bonus)+'</b></div>'+
+    '<div class="note" style="margin-top:6px">充值是预收款：本金算进实收现金；会员日后用余额付款时，才算实际消费。</div></div>';
+  var c='<div class="mbox"><div class="l"><span>实收现金</span><span class="chip">进账</span></div>'+
+    '<div class="v num">'+mv(f.cash_in,'未单列')+'</div>'+
+    '<div class="note" style="margin:-4px 0 8px">= 现付 + 充值本金（退款已扣）</div>'+
+    '<div class="sp"><span>现付</span><b>'+mv(cash,'未单列')+'</b></div>'+
+    '<div class="sp"><span>+ 充值本金</span><b>'+mv(tu.principal)+'</b></div>'+
+    '<div class="note" style="margin-top:6px">'+(isNum(f.cash_in)?'当期实际进账的钱。余额付是花以前充的钱，不重复计入。':'该店该期现付未单列（后台只核到双店合计），实收现金不推算。')+'</div></div>';
+  return card('c12','💰','资金口径 · '+periodLabel()+' · '+storeLabel(),'口径 v2 · 储值汇总 '+esc(D.sources.stored_value.as_of.slice(11))+' 东京','<div class="money3">'+a+b+c+'</div>');
+}
+function moneyTable(){
+  if(locked())return '';
+  var P=D.periods[S.period], K=['cbd','cac','all'];
+  function cell(f,k){var pb=f.pay_balance||{},tu=f.topup||{};
+    if(k==='gmv')return mv(f.gmv);if(k==='cash')return mv(f.pay_cash,'未单列');if(k==='bal')return mv(pb.amount);
+    if(k==='balp')return mv(pb.principal);if(k==='balb')return mv(pb.bonus,'未单列');
+    if(k==='tc')return isNum(tu.count)?'<span class="num">'+tu.count+' 笔</span>':'<span class="nc">待接入</span>';
+    if(k==='tp')return mv(tu.principal);if(k==='tb')return mv(tu.bonus);return mv(f.cash_in,'未单列')}
+  var R=[['gmv','实际消费',1],['cash','└ 现付',0],['bal','└ 余额付',0],['balp','　 · 本金',0],['balb','　 · 赠金',0],
+         ['tc','充值笔数',0],['tp','充值本金',1],['tb','充值赠送',0],['in','实收现金',1]];
+  var rows=R.map(function(r){return '<tr'+(r[2]?' class="hl"':'')+'><td>'+r[1]+'</td>'+K.map(function(k){return '<td>'+cell(P[k],r[0])+'</td>'}).join('')+'</tr>'}).join('');
+  return card('c12','🧾','资金分店对照 · '+periodLabel(),'实际消费 / 充值 / 实收现金',
+    '<div class="tw"><table class="t"><thead><tr><th>口径</th><th>CBD店</th><th>在公园</th><th>双店合计</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="note" style="margin-top:8px">实收现金 = 现付 + 充值本金。充值不计入实际消费。仍缺：'+esc(D.money_scheme.nulls)+'</div>');
+}
+function topupDaysHTML(){
+  if(locked())return '';
+  var t=D.topup_days||[], sp=0,sb=0,cc=0,ac=0;
+  var rows=t.map(function(r){
+    sp+=r.principal;sb+=r.bonus;if(r.store==='cbd')cc+=r.count;else ac+=r.count;
+    return '<tr><td>'+esc(r.date)+'</td><td style="text-align:left">'+(r.store==='cbd'?'CBD店':'在公园')+'</td><td class="num">'+r.count+'</td><td class="num">'+money(r.principal,0)+'</td><td class="num">'+money(r.bonus,0)+'</td></tr>';
+  }).join('');
+  return card('c6','💳','充值明细 · 11 月迄今','储值汇总 · 单列',
+    '<div class="tw"><table class="t"><thead><tr><th>日期</th><th style="text-align:left">店铺</th><th>笔数</th><th>本金</th><th>赠送</th></tr></thead><tbody>'+rows+
+    '<tr class="hl"><td>合计</td><td style="text-align:left">CBD '+cc+' · 在公园 '+ac+'</td><td class="num">'+(cc+ac)+'</td><td class="num">'+money(sp,0)+'</td><td class="num">'+money(sb,0)+'</td></tr></tbody></table></div>'+
+    '<div class="note" style="margin-top:8px">'+esc(D.topup_days_note)+' 充值不计入营业额 / 实际消费。</div>');
+}
+function payMixHTML(){
+  if(locked())return card('c6','💳','实际消费 · 付款方式', periodLabel()+' · '+storeLabel(), pending('渠道拆分待接入，不套用合计支付构成。'));
+  var f=fig(), pb=f.pay_balance||{}, cash=f.pay_cash, bal=pb.amount, net=(isNum(cash)&&isNum(bal))?cash+bal:null;
+  var body='<div class="tiles t2" style="margin-bottom:10px">'+
+    '<div class="tile"><div class="l">支付金额</div><div class="v num">'+mv(f.pay)+'</div></div>'+
+    '<div class="tile"><div class="l">退款</div><div class="v num">'+mv(f.refund)+'</div></div></div>';
+  if(S.period==='month'&&S.store==='all'){
+    var p=D.payment;
+    body+='<div class="row"><span>微信</span><div class="grow1">'+hbar(p.wechat/net*100,'#07C160')+'</div><span class="num" style="font-weight:700">'+money(p.wechat)+' · '+pct(p.wechat,net)+'</span></div>'+
+      '<div class="row"><span>支付宝</span><div class="grow1">'+hbar(p.alipay/net*100,'#1677FF')+'</div><span class="num" style="font-weight:700">'+money(p.alipay)+' · '+pct(p.alipay,net)+'</span></div>'+
+      '<div class="row"><span>现金</span><div class="grow1">'+hbar(p.cash/net*100,'#8A6F6A')+'</div><span class="num" style="font-weight:700">'+money(p.cash)+' · '+pct(p.cash,net)+'</span></div>';
+  } else {
+    body+='<div class="row"><span>现付</span><div class="grow1">'+hbar(isNum(net)?cash/net*100:0,'#07C160')+'</div><span class="num" style="font-weight:700">'+(isNum(cash)?money(cash)+' · '+pct(cash,net):'<span class="nc">未单列</span>')+'</span></div>';
+  }
+  body+='<div class="row"><span>余额付</span><div class="grow1">'+hbar(isNum(net)?bal/net*100:0,'var(--red)')+'</div><span class="num" style="font-weight:700">'+(isNum(bal)?money(bal)+(isNum(net)?' · '+pct(bal,net):''):'<span class="nc">待接入</span>')+'</span></div>'+
+    '<div class="note" style="margin-top:8px">'+(S.period==='month'&&S.store==='all'?esc(D.payment.note):'按支付构成净额（支付 − 退款）'+(isNum(net)?' '+money(net):'')+'。'+(S.period==='month'?'本月分店只核到余额付，现付（微信/支付宝/现金）未单列。':'今日/本周只有微信与余额两种付款。'))+'</div>';
+  return card('c6','💳','实际消费 · 付款方式', periodLabel()+' · '+storeLabel(), body);
+}
+
 function vHome(){
-  var g='<div class="grid" style="margin-bottom:16px">'+ringsHTML()+'</div><div class="obs">'+esc(D.header_note)+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
+  var g='<div class="grid" style="margin-bottom:16px">'+ringsHTML()+'</div><div class="obs">'+esc(D.header_note)+'</div><div class="grid" style="margin-bottom:16px">'+moneyCard()+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
   g+=card('c12','📍','双店对照 · 点评清单 + 小程序实绩', D.sources.dianping.as_of,
     '<div class="store-grid">'+storeCard('cbd',S.store==='cac')+storeCard('cac',S.store==='cbd')+'</div>'+
     '<div class="note" style="margin-top:10px">'+esc(D.stores_extra_note)+' 评分 / 评价数 / 人均 / 榜单 / 套餐价来自 '+esc(D.sources.dianping.as_of)+' 大众点评截图；营业数字来自小程序后台（'+esc(D.sources.miniprogram.as_of)+' 东京）。</div>');
@@ -527,28 +623,16 @@ function vHome(){
 }
 
 function vBiz(){
-  var g=kpisHTML()+extraNotes()+'<div class="grid">';
+  var g='<div class="grid" style="margin-bottom:16px">'+moneyCard()+moneyTable()+'</div>'+kpisHTML()+extraNotes()+'<div class="grid">';
   g+=card('c12','📍','双店对照 · 点评清单 + 小程序实绩', D.sources.dianping.as_of,
     '<div class="store-grid">'+storeCard('cbd',S.store==='cac')+storeCard('cac',S.store==='cbd')+'</div>'+
     '<div class="note" style="margin-top:10px">'+esc(D.stores_extra_note)+'</div>');
-  g+=card('c12','📈','日趋势 · '+storeLabel()+' · '+channelLabel()+' · 覆盖 11-16 至 11-17',
-    locked()?'':seg('m',[['gmv','营业总额'],['orders','单量(笔)']],S.metric).replace('class="seg"','class="seg" style="margin:0"'),
+  g+=card('c12','📈','日趋势 · '+storeLabel()+' · '+channelLabel()+' · 覆盖 '+D.days[0].date+' 至 '+D.days[D.days.length-1].date,
+    locked()?'':seg('m',[['gmv','实际消费'],['orders','单量(笔)']],S.metric).replace('class="seg"','class="seg" style="margin:0"'),
     trendSVG());
   g+=funnelHTML();
-  if(!locked()&&S.period==='month'&&S.store==='all'){
-    var p=D.payment, sum=p.methods_sum;
-    g+=card('c6','💳','支付构成 · 11 月迄今 · 双店','小程序后台',
-      '<div class="tiles t2" style="margin-bottom:10px">'+
-        '<div class="tile"><div class="l">支付</div><div class="v num">'+money(p.pay_total)+'</div></div>'+
-        '<div class="tile"><div class="l">退款</div><div class="v num">'+money(p.refund)+'</div></div></div>'+
-      '<div class="row"><span>微信</span><div class="grow1">'+hbar(p.wechat/p.pay_total*100,'#07C160')+'</div><span class="num" style="font-weight:700">'+money(p.wechat)+' · '+pct(p.wechat,p.pay_total)+'</span></div>'+
-      '<div class="row"><span>支付宝</span><div class="grow1">'+hbar(p.alipay/p.pay_total*100,'#1677FF')+'</div><span class="num" style="font-weight:700">'+money(p.alipay)+' · '+pct(p.alipay,p.pay_total)+'</span></div>'+
-      '<div class="row"><span>余额（储值）</span><div class="grow1">'+hbar(p.balance/p.pay_total*100,'var(--red)')+'</div><span class="num" style="font-weight:700">'+money(p.balance)+' · '+pct(p.balance,p.pay_total)+'</span></div>'+
-      '<div class="note" style="margin-top:8px">'+esc(p.note)+'</div>');
-  } else {
-    g+=card('c6','💳','支付构成', periodLabel()+' · '+storeLabel(),
-      (S.period==='month'&&S.store==='all'&&locked())?pending('渠道拆分待接入，不套用合计支付构成。'):'<div class="note">支付方式目前只有 11 月迄今、双店合计的一笔数。切到今日/本周或单店时不拆开，也不补 0。</div>');
-  }
+  g+=payMixHTML();
+  g+=topupDaysHTML();
   g+=card('c6','🍽️','堂食 / 团购 / 外卖拆分','待接入', pending(D.channels_note));
   g+=deliveryHTML();
   g+=card('c6','🎫','团购','待接入', pending(D.group_buy_note));
