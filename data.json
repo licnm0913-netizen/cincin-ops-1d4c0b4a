@@ -8,13 +8,13 @@
     "city": "济南",
     "brand_miniapp": "请在弄堂"
   },
-  "updated_at": "2026-11-21T19:17:00+09:00",
-  "updated_label": "2026-11-21（周六）东京 19:17（济南 18:17）",
+  "updated_at": "2026-11-22T14:23:00+09:00",
+  "updated_label": "2026-11-22（周日）东京 14:23（济南 13:23）",
   "status": "今日迄今，非全天锁定",
-  "header_note": "一句观察（今日，口径 v2）：双店实际消费 ¥2,643.00（41 笔），其中现付 ¥1,819.00、余额付 ¥815.75；另有充值 4 笔本金 ¥1,100（赠 ¥178）单列，不计入营业额。今日实收现金 ¥2,919.00。",
+  "header_note": "一句观察（今日，口径 v2）：双店实际消费 ¥375.00（5 笔），其中现付 ¥150.00、余额付 ¥212.10；另有充值 1 笔本金 ¥500（赠 ¥88）单列，不计入营业额。今日实收现金 ¥650.00。",
   "sources": {
     "miniprogram": {
-      "as_of": "2026-11-21 19:17",
+      "as_of": "2026-11-22 14:23",
       "tz": "Asia/Tokyo",
       "label": "小程序后台·营业汇总 / 商品汇总表 / 首页（品牌「请在弄堂」）"
     },
@@ -34,7 +34,7 @@
       "label": "大拙口头确认（2026-11-17）"
     },
     "stored_value": {
-      "as_of": "2026-11-21 20:00",
+      "as_of": "2026-11-22 14:24",
       "tz": "Asia/Tokyo",
       "label": "小程序后台·数据›储值汇总 + 营业汇总›支付构成"
     }
@@ -42,256 +42,263 @@
   "periods": {
     "today": {
       "label": "今日",
-      "range": "截至 2026-11-21 19:17（东京，济南 18:17），非全天锁定",
-      "all": {
-        "gmv": 2643,
-        "rev": 2519.82,
-        "disc": 8.25,
-        "pay": 2846.75,
-        "refund": 212,
-        "orders": 41,
-        "pay_cash": 1819.0,
-        "pay_balance": {
-          "amount": 815.75,
-          "principal": null,
-          "bonus": 114.93
-        },
-        "topup": {
-          "count": 4,
-          "principal": 1100,
-          "bonus": 178
-        },
-        "cash_in": 2919.0
-      },
+      "range": "截至 2026-11-22 14:23（东京，济南 13:23），非全天锁定",
+      "note": "今日为截至 14:23 东京（济南 13:23）的迄今数，非全天锁定。单量是支付笔数，不是杯量。实际消费 = 后台营业总额（不含充值）。",
       "cbd": {
-        "gmv": 623,
-        "rev": 575.73,
-        "disc": 3.6,
-        "pay": 619.4,
-        "refund": 0,
-        "orders": 9,
-        "pay_cash": 297.4,
+        "gmv": 165.0,
+        "rev": 132.21,
+        "disc": 9.9,
+        "pay": 155.1,
+        "refund": 0.0,
+        "orders": 2,
+        "pay_cash": 0.0,
         "pay_balance": {
-          "amount": 322.0,
+          "amount": 155.1,
           "principal": null,
-          "bonus": 43.67
+          "bonus": 22.89
         },
         "topup": {
-          "count": 2,
-          "principal": 400,
-          "bonus": 60
+          "count": 1,
+          "principal": 500,
+          "bonus": 88
         },
-        "cash_in": 697.4
+        "cash_in": 500.0
       },
       "cac": {
-        "gmv": 2020,
-        "rev": 1944.09,
-        "disc": 4.65,
-        "pay": 2227.35,
-        "refund": 212,
-        "orders": 32,
-        "pay_cash": 1521.6,
+        "gmv": 210.0,
+        "rev": 199.56,
+        "disc": 3.0,
+        "pay": 207.0,
+        "refund": 0.0,
+        "orders": 3,
+        "pay_cash": 150.0,
         "pay_balance": {
-          "amount": 493.75,
+          "amount": 57.0,
           "principal": null,
-          "bonus": 71.26
+          "bonus": 7.44
         },
         "topup": {
-          "count": 2,
-          "principal": 700,
-          "bonus": 118
+          "count": 0,
+          "principal": 0,
+          "bonus": 0
         },
-        "cash_in": 2221.6
+        "cash_in": 150.0
       },
-      "note": "今日为截至 19:17 东京（济南 18:17）的迄今数，非全天锁定。单量是支付笔数，不是杯量。实际消费 = 后台营业总额（不含充值）。"
+      "all": {
+        "gmv": 375.0,
+        "rev": 331.77,
+        "disc": 12.9,
+        "pay": 362.1,
+        "refund": 0.0,
+        "orders": 5,
+        "pay_cash": 150.0,
+        "pay_balance": {
+          "amount": 212.1,
+          "principal": null,
+          "bonus": 30.33
+        },
+        "topup": {
+          "count": 1,
+          "principal": 500,
+          "bonus": 88
+        },
+        "cash_in": 650.0
+      }
     },
     "week": {
       "label": "本周",
-      "range": "11-16 至 11-21（周一至周六迄今）",
-      "all": {
-        "gmv": 6392,
-        "rev": 5969.08,
-        "disc": 190.75,
-        "pay": 6438.25,
-        "refund": 237,
-        "orders": 117,
-        "pay_cash": 4430.5,
-        "pay_balance": {
-          "amount": 1770.75,
-          "principal": null,
-          "bonus": 232.17
-        },
-        "topup": {
-          "count": 5,
-          "principal": 1600,
-          "bonus": 266
-        },
-        "cash_in": 6030.5
-      },
+      "range": "11-16 至 11-22（周一至周日迄今）",
+      "note": "本周 11-16 至 11-22，小程序后台·营业汇总按日期合计；充值按储值汇总日行相加。",
       "cbd": {
-        "gmv": 2445,
-        "rev": 2143.03,
-        "disc": 183.6,
-        "pay": 2286.4,
-        "refund": 25,
-        "orders": 48,
+        "gmv": 2610.0,
+        "rev": 2275.24,
+        "disc": 193.5,
+        "pay": 2441.5,
+        "refund": 25.0,
+        "orders": 50,
         "pay_cash": 1334.9,
         "pay_balance": {
-          "amount": 926.5,
+          "amount": 1081.6,
           "principal": null,
-          "bonus": null
+          "bonus": 141.26
         },
         "topup": {
-          "count": 3,
-          "principal": 900,
-          "bonus": 148
+          "count": 4,
+          "principal": 1400,
+          "bonus": 236
         },
-        "cash_in": 2234.9
+        "cash_in": 2734.9
       },
       "cac": {
-        "gmv": 3947,
-        "rev": 3826.05,
-        "disc": 7.15,
-        "pay": 4151.85,
-        "refund": 212,
-        "orders": 69,
-        "pay_cash": 3095.6,
+        "gmv": 4157.0,
+        "rev": 4025.61,
+        "disc": 10.15,
+        "pay": 4358.85,
+        "refund": 212.0,
+        "orders": 72,
+        "pay_cash": 3245.6,
         "pay_balance": {
-          "amount": 844.25,
+          "amount": 901.25,
           "principal": null,
-          "bonus": null
+          "bonus": 121.24
         },
         "topup": {
           "count": 2,
           "principal": 700,
           "bonus": 118
         },
-        "cash_in": 3795.6
+        "cash_in": 3945.6
       },
-      "note": "本周 11-16 至 11-21，小程序后台·营业汇总按日期合计；充值按储值汇总日行相加。"
+      "all": {
+        "gmv": 6767.0,
+        "rev": 6300.85,
+        "disc": 203.65,
+        "pay": 6800.35,
+        "refund": 237.0,
+        "orders": 122,
+        "pay_cash": 4580.5,
+        "pay_balance": {
+          "amount": 1982.85,
+          "principal": null,
+          "bonus": 262.5
+        },
+        "topup": {
+          "count": 6,
+          "principal": 2100,
+          "bonus": 354
+        },
+        "cash_in": 6680.5
+      }
     },
     "month": {
       "label": "本月迄今",
-      "range": "2026-11-01 至 2026-11-21 19:17（东京）",
-      "all": {
-        "gmv": 23288.7,
-        "rev": 22212.24,
-        "disc": 362.83,
-        "pay": 23306.87,
-        "refund": 381,
-        "orders": 514,
-        "pay_cash": 17554.3,
-        "pay_balance": {
-          "amount": 5371.57,
-          "principal": null,
-          "bonus": 713.63
-        },
-        "topup": {
-          "count": 15,
-          "principal": 3600,
-          "bonus": 566
-        },
-        "cash_in": 21154.3
-      },
+      "range": "2026-11-01 至 2026-11-22 14:23（东京）",
+      "note": "11 月迄今，小程序后台·营业汇总 + 储值汇总。单量是支付笔数，不是杯量。",
       "cbd": {
-        "gmv": 7150.7,
-        "rev": 6618.82,
-        "disc": 284.32,
-        "pay": 7035.38,
-        "refund": 169,
-        "orders": 154,
-        "pay_cash": null,
+        "gmv": 7315.7,
+        "rev": 6751.03,
+        "disc": 294.22,
+        "pay": 7190.48,
+        "refund": 169.0,
+        "orders": 156,
+        "pay_cash": 4479.85,
         "pay_balance": {
-          "amount": 2386.53,
+          "amount": 2541.63,
           "principal": null,
-          "bonus": 247.56
+          "bonus": 270.45
         },
         "topup": {
-          "count": 5,
-          "principal": 1300,
-          "bonus": 208
+          "count": 6,
+          "principal": 1800,
+          "bonus": 296
         },
-        "cash_in": null
+        "cash_in": 6279.85
       },
       "cac": {
-        "gmv": 16138.0,
-        "rev": 15593.42,
-        "disc": 78.51,
-        "pay": 16271.49,
-        "refund": 212,
-        "orders": 360,
-        "pay_cash": null,
+        "gmv": 16348.0,
+        "rev": 15792.98,
+        "disc": 81.51,
+        "pay": 16478.49,
+        "refund": 212.0,
+        "orders": 363,
+        "pay_cash": 13224.45,
         "pay_balance": {
-          "amount": 2985.04,
+          "amount": 3042.04,
           "principal": null,
-          "bonus": 466.07
+          "bonus": 473.51
         },
         "topup": {
           "count": 10,
           "principal": 2300,
           "bonus": 358
         },
-        "cash_in": null
+        "cash_in": 15524.45
       },
-      "note": "11 月迄今，小程序后台·营业汇总 + 储值汇总。单量是支付笔数，不是杯量。"
+      "all": {
+        "gmv": 23663.7,
+        "rev": 22544.01,
+        "disc": 375.73,
+        "pay": 23668.97,
+        "refund": 381.0,
+        "orders": 519,
+        "pay_cash": 17704.3,
+        "pay_balance": {
+          "amount": 5583.67,
+          "principal": null,
+          "bonus": 743.96
+        },
+        "topup": {
+          "count": 16,
+          "principal": 4100,
+          "bonus": 654
+        },
+        "cash_in": 21804.3
+      }
     }
   },
   "days": [
     {
       "date": "11-16",
       "cbd_orders": 7,
-      "cbd_gmv": 321,
+      "cbd_gmv": 321.0,
       "cac_orders": 5,
-      "cac_gmv": 303
+      "cac_gmv": 303.0
     },
     {
       "date": "11-17",
       "cbd_orders": 8,
-      "cbd_gmv": 389,
+      "cbd_gmv": 389.0,
       "cac_orders": 6,
-      "cac_gmv": 311
+      "cac_gmv": 311.0
     },
     {
       "date": "11-18",
       "cbd_orders": 7,
-      "cbd_gmv": 365,
+      "cbd_gmv": 365.0,
       "cac_orders": 15,
-      "cac_gmv": 668
+      "cac_gmv": 668.0
     },
     {
       "date": "11-19",
       "cbd_orders": 8,
-      "cbd_gmv": 203,
+      "cbd_gmv": 203.0,
       "cac_orders": 6,
-      "cac_gmv": 499
+      "cac_gmv": 499.0
     },
     {
       "date": "11-20",
       "cbd_orders": 9,
-      "cbd_gmv": 544,
+      "cbd_gmv": 544.0,
       "cac_orders": 5,
-      "cac_gmv": 146
+      "cac_gmv": 146.0
     },
     {
       "date": "11-21",
       "cbd_orders": 9,
-      "cbd_gmv": 623,
+      "cbd_gmv": 623.0,
       "cac_orders": 32,
-      "cac_gmv": 2020
+      "cac_gmv": 2020.0
+    },
+    {
+      "date": "11-22",
+      "cbd_orders": 2,
+      "cbd_gmv": 165.0,
+      "cac_orders": 3,
+      "cac_gmv": 210.0
     }
   ],
-  "days_note": "本周 11-16 至 11-21 日度。11-16 之前不补 0。来源：小程序后台·营业汇总。分店日营收未提供。",
+  "days_note": "本周 11-16 至 11-22 日度。11-16 之前不补 0。来源：小程序后台·营业汇总。分店日营收未提供。",
   "payment": {
     "period": "month",
     "store": "all",
-    "wechat": 17438.65,
+    "wechat": 17588.65,
     "alipay": 110,
-    "balance": 5371.57,
-    "pay_total": 22925.87,
+    "balance": 5583.67,
+    "pay_total": 23287.97,
     "refund": 381,
-    "methods_sum": 22920.22,
+    "methods_sum": 23282.32,
     "gap": 5.65,
-    "note": "11 月迄今双店合计（截至 11-21 19:17 东京），支付构成表净额（微信为收入 ¥17,705.65 减退款 ¥267）。与三种方式之和差 ¥5.65 为现金（11-15）。余额为会员余额付款，是实际消费的一种付款方式；充值另见储值汇总，不在此处。",
+    "note": "11 月迄今双店合计（截至 11-22 14:23 东京），支付构成表净额（微信为收入 ¥17,855.65 减退款 ¥267）。与三种方式之和差 ¥5.65 为现金（11-15）。余额为会员余额付款，是实际消费的一种付款方式；充值另见储值汇总，不在此处。",
     "cash": 5.65
   },
   "home_today_cbd": {
@@ -521,12 +528,10 @@
     "breakeven_formula": "保本营业额 = 月固定成本 ÷ 毛利率"
   },
   "alerts": [
-    "今日小程序数字截至东京 19:17（济南 18:17），非全天锁定",
-    "在公园今日实际消费 ¥2,020.00（32 笔），约为本月迄今日均 ¥768 的 2.6 倍；含退款 ¥212（3 笔）",
-    "在公园今日实际消费付款：现付 ¥1,521.60、余额付 ¥493.75（营业总额本身不含充值）",
-    "今日充值单列：在公园 2 笔本金 ¥700（赠 ¥118），CBD 2 笔本金 ¥400（赠 ¥60），不计入营业额",
-    "11 月迄今实际消费 ¥23,288.70；充值另计 15 笔本金 ¥3,600（赠 ¥566）",
-    "余额付占 11 月迄今实付净额 23.4%，余额赠金 ¥713.63",
+    "今日小程序数字截至东京 14:23（济南 13:23），非全天锁定",
+    "今日充值单列：CBD 1 笔本金 ¥500（赠 ¥88），在公园无充值，不计入营业额",
+    "11 月迄今实际消费 ¥23,663.70；充值另计 16 笔本金 ¥4,100（赠 ¥654）",
+    "余额付占 11 月迄今实付净额 24.0%，余额赠金 ¥743.96",
     "固定成本已录入：双店月固定 ¥26,666.67（租金已确认；工资 ¥12,000 为双店合计，含社保）",
     "毛利率待接入，保本额需填写毛利率后计算，不估算",
     "淘宝闪购外卖、团购、杯量、单杯成本、渠道拆分待接入"
@@ -538,7 +543,7 @@
     "复购与好评",
     "榜单/店铺分"
   ],
-  "flywheel_note": "余额付已占实付净额约 23%，11 月迄今另有 15 笔充值（本金 ¥3,600），是复购端的已见信号；毛利仍待成本接入后再判断能否支撑投流。CBD 环境榜、在公园口味榜已见于点评。",
+  "flywheel_note": "余额付已占实付净额约 24%，11 月迄今另有 16 笔充值（本金 ¥4,100），是复购端的已见信号；毛利仍待成本接入后再判断能否支撑投流。CBD 环境榜、在公园口味榜已见于点评。",
   "footer": "视觉：八边形标志 + 焕新后品牌红 #C1272D。品牌字标为「請請咖啡 CINCIN COFFEE」，口号「您请来 请您来」。店铺对应：CinCin CBD = 点评 CBD店；CinCin在公园 = 点评 CAC艺术社区店。济南比东京慢 1 小时。数字只写已核对的来源，缺的标「待接入」，不补 0。",
   "lifeline": {
     "is_estimate": true,
@@ -665,7 +670,14 @@
       "principal": 400,
       "bonus": 60,
       "count": 2
+    },
+    {
+      "date": "11-22",
+      "store": "cbd",
+      "principal": 500,
+      "bonus": 88,
+      "count": 1
     }
   ],
-  "topup_days_note": "来源：小程序后台·数据›储值汇总，2026-11-21 约 20:00 东京读取。只列有充值的日子，未列日期 = 储值汇总无该日记录。"
+  "topup_days_note": "来源：小程序后台·数据›储值汇总，2026-11-22 约 14:24 东京读取。只列有充值的日子，未列日期 = 储值汇总无该日记录。"
 }
